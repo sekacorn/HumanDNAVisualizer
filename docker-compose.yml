@@ -1,0 +1,96 @@
+version: '3.8'
+
+services:
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    container_name: dna-postgres
+    environment:
+      POSTGRES_DB: dna_db
+      POSTGRES_USER: dna_user
+      POSTGRES_PASSWORD: dna_password
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./database/postgres/schema.sql:/docker-entrypoint-initdb.d/schema.sql
+    networks:
+      - dna-network
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U dna_user -d dna_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Redis Cache
+  redis:
+    image: redis:7-alpine
+    container_name: dna-redis
+    ports:
+      - "6379:6379"
+    networks:
+      - dna-network
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # DNA Integrator Service (Spring Boot)
+  dna-integrator:
+    build: ./backend/dna-integrator
+    container_name: dna-integrator
+    ports:
+      - "8081:8081"
+    environment:
+      SPRING_PROFILES_ACTIVE: prod
+      DB_USERNAME: dna_user
+      DB_PASSWORD: dna_password
+      ALLOWED_ORIGINS: http://localhost:3000
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - dna-network
+    restart: unless-stopped
+
+  # AI Model Service (Python/FastAPI)
+  ai-model:
+    build: ./ai-model
+    container_name: dna-ai-model
+    ports:
+      - "8000:8000"
+    networks:
+      - dna-network
+    restart: unless-stopped
+
+  # LLM Service (Python/FastAPI)
+  llm-service:
+    build: ./llm-service
+    container_name: dna-llm-service
+    ports:
+      - "8002:8002"
+    networks:
+      - dna-network
+    restart: unless-stopped
+
+  # Frontend (React/Vite)
+  frontend:
+    build: ./frontend
+    container_name: dna-frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - dna-integrator
+      - ai-model
+      - llm-service
+    networks:
+      - dna-network
+    restart: unless-stopped
+
+networks:
+  dna-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

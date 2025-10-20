@@ -1,0 +1,53 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: dna-integrator
+  datasource:
+    url: jdbc:postgresql://postgres:5432/dna_db
+    username: ${DB_USERNAME:dna_user}
+    password: ${DB_PASSWORD:dna_password}
+    driver-class-name: org.postgresql.Driver
+  jpa:
+    hibernate:
+      ddl-auto: update
+    show-sql: false
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        format_sql: true
+  servlet:
+    multipart:
+      max-file-size: 100MB
+      max-request-size: 100MB
+
+# File upload settings
+upload:
+  max-vcf-size: 50MB
+  max-fhir-size: 10MB
+  max-csv-size: 5MB
+  allowed-formats: vcf,json,csv,fasta,pdb,dna
+
+# Security settings
+security:
+  allowed-origins: ${ALLOWED_ORIGINS:http://localhost:3000}
+
+# Actuator endpoints
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics,prometheus
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+
+# Logging
+logging:
+  level:
+    com.dna.integrator: INFO
+    org.springframework: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"

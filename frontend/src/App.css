@@ -1,0 +1,20 @@
+/* Custom application styles */
+
+.glass-panel {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(10px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+}
+
+.btn-primary {
+  @apply bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:shadow-lg hover:scale-105;
+}
+
+.btn-secondary {
+  @apply bg-gray-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:bg-gray-600;
+}
+
+.card {
+  @apply glass-panel p-6 shadow-xl;
+}
