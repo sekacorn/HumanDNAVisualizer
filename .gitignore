@@ -1,24 +1,26 @@
+# ======================
 # Dependencies
+# ======================
 node_modules/
 target/
 __pycache__/
-*.pyc
-*.pyo
-*.pyd
-.Python
 venv/
 env/
 
+# ======================
 # Build outputs
+# ======================
 dist/
 build/
 *.class
 *.jar
-!gradle-wrapper.jar
 *.war
 *.ear
+!gradle-wrapper.jar
 
-# IDE
+# ======================
+# IDE / Editor
+# ======================
 .idea/
 .vscode/
 *.swp
@@ -26,18 +28,33 @@ build/
 *~
 .DS_Store
 
-# Environment
+# ======================
+# Environment / Secrets
+# ======================
 .env
-.env.local
-.env.production
+.env.*
+!.env.example
 
+# ======================
 # Logs
+# ======================
 *.log
 logs/
 
-# Database
+# ======================
+# Databases
+# ======================
 *.db
 *.sqlite
 
+# ======================
 # OS
+# ======================
 Thumbs.db
+
+# ======================
+# Temp / Cache
+# ======================
+tmp/
+.cache/
+downloads/

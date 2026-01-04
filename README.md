@@ -15,6 +15,20 @@ HumanDNAVisualizer is a production-ready, open-source web application that empow
 - **Phenotypic Data**: FHIR-compliant health records
 - **Environmental Data**: Lifestyle surveys (CSV)
 
+## Screenshots
+
+### Data Upload & Analysis Interface
+![Data Upload Interface](Screenshot-1.png)
+*Upload genomic data (VCF), health records (FHIR), and lifestyle data (CSV) with AI-powered natural language queries*
+
+### Interactive 3D DNA Visualization
+![3D DNA Visualization](Screenshot-2.png)
+*Explore the DNA double helix structure with interactive rotation, zoom, and color-coded base pairs*
+
+### Data Upload & LLM Chat
+![Upload and Chat Interface](Screenshot-3.png)
+*Seamless integration of data upload with personalized AI responses in multiple styles*
+
 ### Key Features
 
 - 🧬 **Data Integration**: Upload and parse VCF, FHIR, CSV, JSON, PDB, and FASTA formats
@@ -63,6 +77,35 @@ HumanDNAVisualizer/
 - **Git**
 
 ## Quick Start
+
+### Option 1: One-Command Start (Recommended for Demo)
+
+**Windows:**
+```bash
+start-demo.bat
+```
+
+**Linux/Mac:**
+```bash
+chmod +x start-demo.sh
+./start-demo.sh
+```
+
+This automatically starts:
+- ✅ Backend API (Port 8081) with demo mode enabled
+- ✅ AI Model Service (Port 8000)
+- ✅ Frontend (Port 3000)
+- ✅ Auto-creates demo users (demo/demo123, admin/admin123)
+
+**To stop all services:**
+```bash
+stop-all.bat  # Windows
+./stop-all.sh  # Linux/Mac
+```
+
+See [STARTUP-SCRIPTS-GUIDE.md](STARTUP-SCRIPTS-GUIDE.md) for details.
+
+### Option 2: Docker Compose
 
 ### 1. Clone the Repository
 

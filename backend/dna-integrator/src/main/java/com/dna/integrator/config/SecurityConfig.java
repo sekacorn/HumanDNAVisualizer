@@ -48,6 +48,16 @@ public class SecurityConfig {
                         .requestMatchers("/api/public/**").permitAll()
                         .requestMatchers("/actuator/health").permitAll()
 
+                        // Swagger/OpenAPI documentation endpoints
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**", "/swagger-ui.html").permitAll()
+
+                        // H2 Console (development only)
+                        .requestMatchers("/h2-console/**").permitAll()
+
+                        // Demo endpoints (development only) - allow unauthenticated access
+                        .requestMatchers("/api/demo/**").permitAll()
+                        .requestMatchers("/api/data/**").permitAll()  // Allow data upload in dev mode
+
                         // Admin-only endpoints
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
 

@@ -6,7 +6,7 @@ Based on genomic, phenotypic, and environmental data
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
-from typing import List, Dict, Optional
+from typing import List, Dict, Optional, Any
 import torch
 import torch.nn as nn
 import numpy as np
@@ -21,7 +21,7 @@ app = FastAPI(title="DNA Trait Predictor", version="1.0.0")
 
 class GenomicInput(BaseModel):
     variants: List[Dict[str, str]]
-    phenotypic_data: Optional[Dict[str, any]] = None
+    phenotypic_data: Optional[Dict[str, Any]] = None
     environmental_data: Optional[Dict[str, str]] = None
 
 

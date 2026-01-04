@@ -63,6 +63,17 @@ management:
       prometheus:
         enabled: true
 
+# Demo Mode Configuration (ENABLED for development)
+app:
+  demo-mode:
+    enabled: true                        # Enable demo mode features
+    skip-email-verification: true        # No email verification required
+    auto-assign-user-role: true          # Auto-assign USER role on registration
+    relaxed-password-policy: true        # Allow weaker passwords (min 6 chars)
+    expose-demo-credentials: true        # Show demo credentials in API
+    auto-create-demo-users: true         # Auto-create demo users on startup
+    banner-message: "DEMO MODE ACTIVE - For development and testing only"
+
 # Logging
 logging:
   level:

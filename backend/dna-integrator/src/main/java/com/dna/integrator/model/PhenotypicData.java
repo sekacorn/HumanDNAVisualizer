@@ -46,7 +46,7 @@ public class PhenotypicData {
     @Column
     private String code; // LOINC or SNOMED code
 
-    @Column
+    @Column(name = "observation_value")  // "value" is a reserved keyword in H2
     private String value;
 
     @Column

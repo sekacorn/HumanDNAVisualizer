@@ -33,6 +33,17 @@ upload:
 security:
   allowed-origins: ${ALLOWED_ORIGINS:http://localhost:3000}
 
+# Demo Mode Configuration (DISABLED for production)
+app:
+  demo-mode:
+    enabled: false                       # Demo mode MUST be disabled in production
+    skip-email-verification: false
+    auto-assign-user-role: false
+    relaxed-password-policy: false
+    expose-demo-credentials: false
+    auto-create-demo-users: false
+    banner-message: "Production mode - Demo features disabled"
+
 # Actuator endpoints
 management:
   endpoints:
