@@ -1,0 +1,1 @@
+This tool can diagnose conditions.

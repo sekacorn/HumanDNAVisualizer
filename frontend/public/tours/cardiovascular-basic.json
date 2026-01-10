@@ -1,0 +1,100 @@
+{
+  "id": "cardiovascular-basic",
+  "systemId": "cardiovascular",
+  "title": "Introduction to the Cardiovascular System",
+  "description": "Learn about the heart, blood vessels, and how blood circulates through your body",
+  "level": "basic",
+  "estimatedMinutes": 15,
+  "prerequisites": [],
+  "learningObjectives": [
+    "Identify the major structures of the cardiovascular system",
+    "Understand the path of blood flow through the heart",
+    "Explain the function of arteries, veins, and capillaries",
+    "Describe the basic cardiac cycle"
+  ],
+  "steps": [
+    {
+      "stepNumber": 1,
+      "title": "Introduction to the Cardiovascular System",
+      "explanation": "# Welcome to the Cardiovascular System!\n\nThe cardiovascular system is your body's transportation network. It consists of three main components:\n\n1. **The Heart** - A muscular pump that keeps blood moving\n2. **Blood Vessels** - Tubes that carry blood throughout the body\n3. **Blood** - The fluid that transports oxygen, nutrients, and waste products\n\nTogether, these components work continuously to deliver oxygen and nutrients to every cell in your body and remove waste products.\n\n**Think of it like this:** The heart is like a central water pump, blood vessels are like pipes, and blood is like the water flowing through them.",
+      "highlightNodeIds": ["cardiovascular-system"],
+      "overlayConfig": {
+        "intensity": 0.3,
+        "pulseAnimation": true
+      }
+    },
+    {
+      "stepNumber": 2,
+      "title": "The Heart: Your Body's Pump",
+      "explanation": "# The Heart Structure\n\nThe heart is a fist-sized muscular organ located in your chest, slightly left of center. It's divided into **four chambers**:\n\n## Upper Chambers (Atria)\n- **Right Atrium** - Receives deoxygenated blood from the body\n- **Left Atrium** - Receives oxygenated blood from the lungs\n\n## Lower Chambers (Ventricles)\n- **Right Ventricle** - Pumps blood to the lungs\n- **Left Ventricle** - Pumps blood to the entire body\n\nThe heart beats about **60-100 times per minute** at rest, pumping approximately **5 liters** of blood every minute!\n\n**Educational Note:** The left ventricle has thicker walls than the right because it needs more force to pump blood throughout the entire body.",
+      "highlightNodeIds": ["heart", "right-atrium", "right-ventricle", "left-atrium", "left-ventricle"],
+      "overlayConfig": {
+        "intensity": 0.8,
+        "pulseAnimation": true
+      },
+      "evidenceLevel": "HIGH"
+    },
+    {
+      "stepNumber": 3,
+      "title": "Blood Flow Through the Heart",
+      "explanation": "# The Journey of Blood\n\nBlood flows through the heart in a specific pathway. Let's follow one complete circuit:\n\n## Deoxygenated Blood (Blue Path)\n1. Blood returns from the body → **Right Atrium**\n2. Right atrium contracts → **Right Ventricle**\n3. Right ventricle contracts → **Lungs** (via pulmonary artery)\n4. In the lungs: Carbon dioxide is released, oxygen is picked up\n\n## Oxygenated Blood (Red Path)\n5. Blood returns from lungs → **Left Atrium** (via pulmonary veins)\n6. Left atrium contracts → **Left Ventricle**\n7. Left ventricle contracts → **Body** (via aorta)\n8. Oxygen delivered to tissues, carbon dioxide picked up\n9. Return to step 1\n\n**Key Concept:** The heart is really two pumps working together - the right side pumps to the lungs, and the left side pumps to the body.",
+      "highlightNodeIds": ["right-atrium", "right-ventricle", "pulmonary-artery", "left-atrium", "left-ventricle", "aorta"],
+      "overlayConfig": {
+        "intensity": 0.9,
+        "pulseAnimation": true
+      },
+      "evidenceLevel": "HIGH",
+      "interactivePrompt": "Can you trace the path of blood from the right atrium to the aorta?"
+    },
+    {
+      "stepNumber": 4,
+      "title": "Major Blood Vessels",
+      "explanation": "# Types of Blood Vessels\n\nBlood vessels are the highways of your cardiovascular system. There are three main types:\n\n## Arteries\n- **Function:** Carry blood AWAY from the heart\n- **Structure:** Thick, muscular walls to handle high pressure\n- **Largest:** Aorta (main artery from left ventricle)\n- **Blood:** Usually oxygen-rich (red)\n\n## Veins  \n- **Function:** Carry blood TO the heart\n- **Structure:** Thinner walls, contain valves to prevent backflow\n- **Largest:** Vena cava (main vein to right atrium)\n- **Blood:** Usually oxygen-poor (blue)\n\n## Capillaries\n- **Function:** Connect arteries and veins, enable gas exchange\n- **Structure:** Microscopic, one cell thick\n- **Location:** Throughout all body tissues\n- **Blood:** Transition from oxygen-rich to oxygen-poor\n\n**Memory Tip:** **A**rteries = **A**way from heart, **V**eins = to**V**ard heart (the 'v' points toward)",
+      "highlightNodeIds": ["aorta", "vena-cava", "pulmonary-artery", "pulmonary-vein"],
+      "overlayConfig": {
+        "intensity": 0.7
+      },
+      "evidenceLevel": "HIGH",
+      "furtherReading": [
+        {
+          "title": "Blood Vessel Structure and Function",
+          "type": "textbook",
+          "citation": "Standard anatomy textbook reference"
+        }
+      ]
+    },
+    {
+      "stepNumber": 5,
+      "title": "The Cardiac Cycle",
+      "explanation": "# How the Heart Beats\n\nThe cardiac cycle is the sequence of events during one heartbeat. It consists of two main phases:\n\n## Systole (Contraction Phase)\n- Heart muscle **contracts**\n- Blood is **pushed out** of the chambers\n- Higher pressure in the arteries\n- This is the \"thump\" you hear in a heartbeat\n\n## Diastole (Relaxation Phase)\n- Heart muscle **relaxes**\n- Chambers **fill with blood**\n- Lower pressure allows refilling\n- This is the \"lub\" you hear in a heartbeat\n\n### The \"Lub-Dub\" Sound\n- **\"Lub\"** - Valves between atria and ventricles close\n- **\"Dub\"** - Valves between ventricles and arteries close\n\nOne complete cycle (systole + diastole) takes about **0.8 seconds** at rest.\n\n**Coordination is Key:** All four chambers must contract and relax in perfect sequence, controlled by electrical signals in the heart.",
+      "highlightNodeIds": ["heart"],
+      "overlayConfig": {
+        "intensity": 1.0,
+        "pulseAnimation": true
+      },
+      "evidenceLevel": "HIGH",
+      "interactivePrompt": "Listen to your own heartbeat. Can you identify the two sounds of the cardiac cycle?"
+    },
+    {
+      "stepNumber": 6,
+      "title": "Integration with Other Systems",
+      "explanation": "# The Cardiovascular System Works with Others\n\nThe cardiovascular system doesn't work alone. It integrates closely with other body systems:\n\n## Respiratory System\n- **Lungs** provide oxygen to blood\n- **Heart** pumps blood to lungs and body\n- **Gas exchange:** Oxygen in, carbon dioxide out\n\n## Digestive System\n- **Nutrients** absorbed from intestines → bloodstream\n- Blood delivers nutrients to all cells\n\n## Excretory System\n- **Kidneys** filter waste from blood\n- Blood carries waste products for elimination\n\n## All Body Tissues\n- Every cell needs oxygen and nutrients\n- Cardiovascular system is the **universal delivery service**\n- Removes waste products like carbon dioxide\n\n**Big Picture:** The cardiovascular system is essential for maintaining **homeostasis** - keeping your body's internal environment stable.\n\n---\n\n### Educational Disclaimer\n\nThis tour provides educational information about anatomy and physiology. It is for learning purposes only and does not provide medical advice or diagnosis. For health questions, always consult qualified healthcare professionals.",
+      "highlightNodeIds": ["cardiovascular-system", "respiratory-system", "digestive-system"],
+      "overlayConfig": {
+        "intensity": 0.5
+      },
+      "evidenceLevel": "HIGH"
+    }
+  ],
+  "metadata": {
+    "author": "HumanDNAVisualizer Education Team",
+    "createdDate": "2025-01-09",
+    "lastUpdated": "2025-01-09",
+    "version": "1.0.0",
+    "tags": ["cardiovascular", "heart", "blood", "circulation", "basic", "anatomy"],
+    "educationalStandards": [
+      "NGSS HS-LS1-2: Develop and use a model to illustrate hierarchical organization of interacting systems",
+      "AP Biology 4.A.4: Explain how organisms exchange gases with their environment"
+    ]
+  }
+}

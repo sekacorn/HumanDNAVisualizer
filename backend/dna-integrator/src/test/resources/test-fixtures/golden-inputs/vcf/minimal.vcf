@@ -1,0 +1,11 @@
+##fileformat=VCFv4.2
+##fileDate=20250109
+##source=HumanDNAVisualizer_TestFixture
+##reference=GRCh38
+##contig=<ID=1,length=248956422>
+##contig=<ID=2,length=242193529>
+##INFO=<ID=AF,Number=A,Type=Float,Description="Allele Frequency">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	SAMPLE1
+1	1000	rs123	A	G	30	PASS	AF=0.5	GT	0/1
+2	2000	rs456	C	T	40	PASS	AF=0.25	GT	1/1

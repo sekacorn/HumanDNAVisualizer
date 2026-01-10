@@ -1,0 +1,16 @@
+##fileformat=VCFv4.2
+##fileDate=20240101
+##source=TestDataGenerator
+##reference=GRCh38
+##contig=<ID=1,length=248956422>
+##contig=<ID=2,length=242193529>
+##INFO=<ID=DP,Number=1,Type=Integer,Description="Total Depth">
+##INFO=<ID=AF,Number=A,Type=Float,Description="Allele Frequency">
+##FORMAT=<ID=GT,Number=1,Type=String,Description="Genotype">
+##FORMAT=<ID=DP,Number=1,Type=Integer,Description="Read Depth">
+#CHROM	POS	ID	REF	ALT	QUAL	FILTER	INFO	FORMAT	SAMPLE1
+1	10177	rs367896724	A	AC	100	PASS	DP=50;AF=0.5	GT:DP	0/1:30
+1	10235	rs540431307	T	TA	95.5	PASS	DP=45;AF=0.3	GT:DP	0/0:28
+2	12345	rs123456	G	A	89.2	PASS	DP=60;AF=0.7	GT:DP	1/1:35
+2	67890	.	C	T	50.0	PASS	DP=25;AF=0.1	GT:DP	0/1:20
+X	154321	rs789012	A	G	120.5	PASS	DP=80;AF=0.9	GT:DP	1/1:50

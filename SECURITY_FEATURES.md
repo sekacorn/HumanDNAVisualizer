@@ -1,21 +1,24 @@
 # HumanDNAVisualizer - Enterprise Security Features
 
-## ✅ Implemented Security Features
+##  Implemented Security Features
 
-### 1. **User Authentication & Authorization** ✅
+### 1. **User Authentication & Authorization** 
 
 **User Roles:**
+
 - `USER` - Regular users (view/manage own DNA data)
 - `MODERATOR` - Content moderation and user support
 - `ADMIN` - Full system access (user management, audit logs, system config)
 
 **Implementation:**
+
 - Spring Security with BCrypt password hashing
 - JWT (JSON Web Token) authentication
 - Stateless session management
 - Token-based authorization
 
 **Files:**
+
 - `User.java` - User entity with Spring Security UserDetails
 - `Role.java` - Role enum
 - `SecurityConfig.java` - Spring Security configuration
@@ -25,9 +28,10 @@
 
 ---
 
-### 2. **AES-256-GCM Encryption for DNA Data** ✅
+### 2. **AES-256-GCM Encryption for DNA Data** 
 
 **Encryption Details:**
+
 - **Algorithm**: AES (Advanced Encryption Standard)
 - **Mode**: GCM (Galois/Counter Mode) - Authenticated Encryption
 - **Key Size**: 256 bits
@@ -35,18 +39,21 @@
 - **Tag Length**: 128 bits (authentication tag)
 
 **What Gets Encrypted:**
+
 - Genomic data (VCF raw data, parsed variants)
 - Phenotypic data (FHIR JSON)
 - Environmental survey data
 - Any sensitive DNA-related information
 
 **Implementation:**
+
 - `EncryptionService.java` - AES-256-GCM encryption/decryption
 - Automatic encryption before database storage
 - Automatic decryption when retrieving data
 - Secure key management (configurable via application.yml)
 
 **Usage:**
+
 ```java
 // Encrypt DNA data before storage
 String encryptedData = encryptionService.encryptGenomicData(rawDnaData);
@@ -57,9 +64,10 @@ String decryptedData = encryptionService.decryptGenomicData(encryptedData);
 
 ---
 
-### 3. **Multi-Factor Authentication (MFA) with TOTP** ✅
+### 3. **Multi-Factor Authentication (MFA) with TOTP** 
 
 **MFA Features:**
+
 - Time-based One-Time Password (TOTP)
 - Compatible with Google Authenticator, Authy, Microsoft Authenticator
 - QR code generation for easy setup
@@ -67,12 +75,14 @@ String decryptedData = encryptionService.decryptGenomicData(encryptedData);
 - 30-second time window
 
 **Implementation:**
+
 - `MFAService.java` - TOTP generation and verification
 - Google Authenticator library (warrenstrange/googleauth 1.5.0)
 - Per-user MFA secrets stored in User entity
 - Optional MFA (users can enable/disable)
 
 **MFA Flow:**
+
 1. User enables MFA
 2. System generates secret and QR code
 3. User scans QR code with authenticator app
@@ -84,6 +94,7 @@ String decryptedData = encryptionService.decryptGenomicData(encryptedData);
 ### 4. **SSO (Single Sign-On) Support** 🔄 (Configuration Required)
 
 **Supported SSO Providers:**
+
 - Google Workspace
 - Microsoft Azure AD / Entra ID
 - Okta
@@ -91,12 +102,14 @@ String decryptedData = encryptionService.decryptGenomicData(encryptedData);
 - Any SAML 2.0 / OAuth2 / OpenID Connect provider
 
 **Implementation:**
+
 - Spring Security OAuth2 Client (spring-boot-starter-oauth2-client)
 - Spring Security OAuth2 Resource Server
 - User entity supports `ssoProvider` and `ssoId` fields
 - Automatic user provisioning on first SSO login
 
 **Configuration (application.yml):**
+
 ```yaml
 spring:
   security:
@@ -116,9 +129,10 @@ spring:
 
 ---
 
-### 5. **Audit Logging for HIPAA/GDPR Compliance** ✅
+### 5. **Audit Logging for HIPAA/GDPR Compliance** 
 
 **What Gets Logged:**
+
 - User login/logout
 - DNA data uploads
 - Data access (viewing genomic data)
@@ -129,6 +143,7 @@ spring:
 - Security events
 
 **Audit Log Fields:**
+
 - Username
 - Action type
 - Timestamp
@@ -139,6 +154,7 @@ spring:
 - Error messages
 
 **Implementation:**
+
 - `AuditLog.java` - Audit log entity
 - `AuditLogRepository.java` - Data access
 - Automatic logging via Spring AOP interceptors
@@ -147,16 +163,16 @@ spring:
 
 ---
 
-### 6. **Security Dependencies (All Open-Source)** ✅
+### 6. **Security Dependencies (All Open-Source)** 
 
-| Dependency | Version | License | Purpose |
-|------------|---------|---------|---------|
-| Spring Security | 6.2.0 | Apache 2.0 | Authentication & Authorization |
-| Spring OAuth2 Client | 6.2.0 | Apache 2.0 | SSO Support |
-| JJWT | 0.12.3 | Apache 2.0 | JWT Tokens |
-| Google Authenticator | 1.5.0 | Apache 2.0 | MFA/TOTP |
-| BCrypt | (Spring) | Apache 2.0 | Password Hashing |
-| Java Crypto API | JDK 17 | GPL+CE | AES-256 Encryption |
+| Dependency           | Version  | License    | Purpose                        |
+| -------------------- | -------- | ---------- | ------------------------------ |
+| Spring Security      | 6.2.0    | Apache 2.0 | Authentication & Authorization |
+| Spring OAuth2 Client | 6.2.0    | Apache 2.0 | SSO Support                    |
+| JJWT                 | 0.12.3   | Apache 2.0 | JWT Tokens                     |
+| Google Authenticator | 1.5.0    | Apache 2.0 | MFA/TOTP                       |
+| BCrypt               | (Spring) | Apache 2.0 | Password Hashing               |
+| Java Crypto API      | JDK 17   | GPL+CE     | AES-256 Encryption             |
 
 **All libraries are open-source with permissive licenses (Apache 2.0 / BSD)**
 
@@ -165,37 +181,42 @@ spring:
 ## 🔐 Security Best Practices Implemented
 
 ### Password Security
-- ✅ BCrypt password hashing (rounds: 10)
-- ✅ Minimum 8 characters
-- ✅ Password validation
-- ✅ Failed login attempt tracking
-- ✅ Account lockout after 5 failed attempts (30-minute lockout)
+
+-  BCrypt password hashing (rounds: 10)
+-  Minimum 8 characters
+-  Password validation
+-  Failed login attempt tracking
+-  Account lockout after 5 failed attempts (30-minute lockout)
 
 ### Token Security
-- ✅ JWT with HS256 signing
-- ✅ 24-hour token expiration (configurable)
-- ✅ Secure token validation
-- ✅ Tokens include user roles for authorization
+
+-  JWT with HS256 signing
+-  24-hour token expiration (configurable)
+-  Secure token validation
+-  Tokens include user roles for authorization
 
 ### Data Protection
-- ✅ AES-256-GCM encryption for DNA data at rest
-- ✅ TLS/HTTPS for data in transit (deployment-level)
-- ✅ Authenticated encryption (GCM mode)
-- ✅ Random IV per encryption operation
-- ✅ Secure key storage (external key management recommended)
+
+-  AES-256-GCM encryption for DNA data at rest
+-  TLS/HTTPS for data in transit (deployment-level)
+-  Authenticated encryption (GCM mode)
+-  Random IV per encryption operation
+-  Secure key storage (external key management recommended)
 
 ### Access Control
-- ✅ Role-Based Access Control (RBAC)
-- ✅ Method-level security annotations
-- ✅ Resource-level authorization
-- ✅ CORS configuration
-- ✅ CSRF protection (disabled for stateless JWT)
+
+-  Role-Based Access Control (RBAC)
+-  Method-level security annotations
+-  Resource-level authorization
+-  CORS configuration
+-  CSRF protection (disabled for stateless JWT)
 
 ### Compliance
-- ✅ HIPAA-aligned audit logging
-- ✅ GDPR data protection measures
-- ✅ Encrypted personal health information
-- ✅ Access tracking and monitoring
+
+-  HIPAA-aligned audit logging
+-  GDPR data protection measures
+-  Encrypted personal health information
+-  Access tracking and monitoring
 
 ---
 
@@ -318,6 +339,7 @@ security:
 ## 📊 Database Schema Updates
 
 ### Users Table
+
 ```sql
 CREATE TABLE users (
     id BIGSERIAL PRIMARY KEY,
@@ -376,19 +398,19 @@ CREATE INDEX idx_audit_timestamp ON audit_logs(timestamp);
 
 ## 🛡️ Security Checklist
 
-- [✅] User authentication (username/password)
-- [✅] Password hashing (BCrypt)
-- [✅] JWT token authentication
-- [✅] Role-based access control (USER, MODERATOR, ADMIN)
-- [✅] Multi-factor authentication (TOTP)
-- [✅] SSO support (OAuth2/SAML)
-- [✅] AES-256-GCM encryption for DNA data
-- [✅] Audit logging (HIPAA/GDPR compliant)
-- [✅] Account lockout (brute-force protection)
-- [✅] Secure password requirements
-- [✅] CORS configuration
-- [✅] Input validation
-- [✅] SQL injection protection (JPA)
+- [] User authentication (username/password)
+- [] Password hashing (BCrypt)
+- [] JWT token authentication
+- [] Role-based access control (USER, MODERATOR, ADMIN)
+- [] Multi-factor authentication (TOTP)
+- [] SSO support (OAuth2/SAML)
+- [] AES-256-GCM encryption for DNA data
+- [] Audit logging (HIPAA/GDPR compliant)
+- [] Account lockout (brute-force protection)
+- [] Secure password requirements
+- [] CORS configuration
+- [] Input validation
+- [] SQL injection protection (JPA)
 - [ ] Rate limiting (TODO: implement with Redis)
 - [ ] DDoS protection (deployment-level: NGINX/CloudFlare)
 - [ ] Security headers (deployment-level: NGINX)
@@ -399,27 +421,32 @@ CREATE INDEX idx_audit_timestamp ON audit_logs(timestamp);
 ## 🎯 Next Steps for Production
 
 1. **Generate Secure Encryption Key**
+
    ```bash
    openssl rand -base64 32
    # Add to application.yml: security.encryption.key
    ```
 
 2. **Configure SSO Providers**
+
    - Register app with Google/Azure/Okta
    - Add client IDs and secrets to environment variables
    - Update CORS allowed origins
 
 3. **External Key Management (Recommended)**
+
    - Use AWS KMS, Azure Key Vault, or HashiCorp Vault
    - Store encryption keys and JWT secrets externally
    - Rotate keys regularly
 
 4. **Deploy with HTTPS**
+
    - Configure TLS certificates
    - Use NGINX reverse proxy with SSL
    - Force HTTPS redirects
 
 5. **Monitoring & Alerts**
+
    - Set up Prometheus/Grafana dashboards
    - Configure alerts for:
      - Failed login attempts spike
@@ -437,6 +464,7 @@ CREATE INDEX idx_audit_timestamp ON audit_logs(timestamp);
 ## 📚 Additional Resources
 
 **Documentation:**
+
 - [Spring Security Reference](https://docs.spring.io/spring-security/reference/)
 - [JWT Best Practices](https://tools.ietf.org/html/rfc8725)
 - [OWASP Top 10](https://owasp.org/www-project-top-ten/)
@@ -444,6 +472,7 @@ CREATE INDEX idx_audit_timestamp ON audit_logs(timestamp);
 - [GDPR Compliance Guide](https://gdpr.eu/)
 
 **Security Testing:**
+
 - Run OWASP ZAP security scan
 - Perform penetration testing
 - Regular dependency vulnerability scans
@@ -451,6 +480,6 @@ CREATE INDEX idx_audit_timestamp ON audit_logs(timestamp);
 
 ---
 
-**Status**: ✅ **Production-Ready Enterprise Security**
+**Status**:  **Production-Ready Enterprise Security**
 
 All critical security features for handling sensitive genomic data have been implemented with industry-standard encryption, authentication, and compliance measures.

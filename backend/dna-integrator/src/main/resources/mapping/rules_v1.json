@@ -1,0 +1,191 @@
+{
+  "version": "1.0.0",
+  "description": "Demo mapping rules for variant-to-anatomy associations. Educational/research only - not for medical diagnosis or treatment.",
+  "disclaimer": "These rules represent simplified demonstrations of variant-anatomy associations. Evidence levels are illustrative. All associations require validation and should not be used for medical decisions.",
+  "baseAnatomyGraph": {
+    "nodes": [
+      {
+        "id": "cardiovascular_system",
+        "type": "SYSTEM",
+        "label": "Cardiovascular System"
+      },
+      {
+        "id": "heart",
+        "type": "ORGAN",
+        "label": "Heart"
+      },
+      {
+        "id": "left_ventricle",
+        "type": "SUBSTRUCTURE",
+        "label": "Left Ventricle"
+      },
+      {
+        "id": "nervous_system",
+        "type": "SYSTEM",
+        "label": "Nervous System"
+      },
+      {
+        "id": "brain",
+        "type": "ORGAN",
+        "label": "Brain"
+      },
+      {
+        "id": "hippocampus",
+        "type": "SUBSTRUCTURE",
+        "label": "Hippocampus"
+      },
+      {
+        "id": "metabolic_system",
+        "type": "SYSTEM",
+        "label": "Metabolic System"
+      },
+      {
+        "id": "liver",
+        "type": "ORGAN",
+        "label": "Liver"
+      },
+      {
+        "id": "hepatocytes",
+        "type": "SUBSTRUCTURE",
+        "label": "Hepatocytes"
+      }
+    ],
+    "edges": [
+      {
+        "from": "cardiovascular_system",
+        "to": "heart",
+        "relation": "contains"
+      },
+      {
+        "from": "heart",
+        "to": "left_ventricle",
+        "relation": "contains"
+      },
+      {
+        "from": "nervous_system",
+        "to": "brain",
+        "relation": "contains"
+      },
+      {
+        "from": "brain",
+        "to": "hippocampus",
+        "relation": "contains"
+      },
+      {
+        "from": "metabolic_system",
+        "to": "liver",
+        "relation": "contains"
+      },
+      {
+        "from": "liver",
+        "to": "hepatocytes",
+        "relation": "contains"
+      }
+    ]
+  },
+  "mappingRules": [
+    {
+      "ruleId": "demo_rule_001",
+      "description": "Demo: Variants on chromosome 1 position 10000-20000 associated with cardiovascular system",
+      "conditions": {
+        "chrom": "1",
+        "positionRange": {
+          "min": 10000,
+          "max": 20000
+        }
+      },
+      "outcome": {
+        "targetNodeId": "cardiovascular_system",
+        "intensity": 0.6,
+        "label": "Variant in genomic region associated with cardiovascular structure",
+        "evidence": "LOW",
+        "sources": [
+          "Demo data - placeholder reference"
+        ]
+      }
+    },
+    {
+      "ruleId": "demo_rule_002",
+      "description": "Demo: Specific rsID rs1234567 associated with heart",
+      "conditions": {
+        "rsid": "rs1234567"
+      },
+      "outcome": {
+        "targetNodeId": "heart",
+        "intensity": 0.8,
+        "label": "Known variant associated with cardiac structure",
+        "evidence": "MEDIUM",
+        "sources": [
+          "Demo data - illustrative association only"
+        ]
+      }
+    },
+    {
+      "ruleId": "demo_rule_003",
+      "description": "Demo: Variants on chromosome X associated with nervous system",
+      "conditions": {
+        "chrom": "X"
+      },
+      "outcome": {
+        "targetNodeId": "nervous_system",
+        "intensity": 0.5,
+        "label": "Variant on X chromosome with neurological pathway association",
+        "evidence": "LOW",
+        "sources": [
+          "Demo data - educational example"
+        ]
+      }
+    },
+    {
+      "ruleId": "demo_rule_004",
+      "description": "Demo: Heterozygous variants (0/1 or 1/0) on chromosome 2 associated with brain",
+      "conditions": {
+        "chrom": "2",
+        "genotypePattern": "^(0/1|1/0|0\\|1|1\\|0)$"
+      },
+      "outcome": {
+        "targetNodeId": "brain",
+        "intensity": 0.7,
+        "label": "Heterozygous variant in region linked to neural development",
+        "evidence": "MEDIUM",
+        "sources": [
+          "Demo data - research context only"
+        ]
+      }
+    },
+    {
+      "ruleId": "demo_rule_005",
+      "description": "Demo: Homozygous alternate variants (1/1) on chromosome 7 associated with metabolic system",
+      "conditions": {
+        "chrom": "7",
+        "genotypePattern": "^(1/1|1\\|1)$"
+      },
+      "outcome": {
+        "targetNodeId": "metabolic_system",
+        "intensity": 0.75,
+        "label": "Homozygous variant in metabolic pathway gene",
+        "evidence": "MEDIUM",
+        "sources": [
+          "Demo data - preliminary finding"
+        ]
+      }
+    },
+    {
+      "ruleId": "demo_rule_006",
+      "description": "Demo: High quality variants (qual >= 90) on chromosome 12 associated with liver",
+      "conditions": {
+        "chrom": "12",
+        "qualityMin": 90.0
+      },
+      "outcome": {
+        "targetNodeId": "liver",
+        "intensity": 0.65,
+        "label": "High-confidence variant near hepatic gene region",
+        "evidence": "LOW",
+        "sources": [
+          "Demo data - illustrative only"
+        ]
+      }
+    }
+  ]
+}

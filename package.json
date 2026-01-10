@@ -1,0 +1,31 @@
+{
+  "name": "humandnavisualizer",
+  "version": "1.0.0",
+  "description": "Educational genomic visualization platform with 3D anatomy viewer",
+  "private": true,
+  "scripts": {
+    "lint:legal": "node scripts/legal-lint.js",
+    "lint:legal:verbose": "node scripts/legal-lint.js --verbose",
+    "test:legal": "node scripts/__tests__/legal-lint.test.js",
+    "dev": "cd frontend && npm run dev",
+    "build": "cd frontend && npm run build",
+    "lint": "cd frontend && npm run lint"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/HumanDNAVisualizer.git"
+  },
+  "keywords": [
+    "genomics",
+    "visualization",
+    "education",
+    "dna",
+    "3d",
+    "anatomy"
+  ],
+  "author": "",
+  "license": "MIT",
+  "engines": {
+    "node": ">=16.0.0"
+  }
+}

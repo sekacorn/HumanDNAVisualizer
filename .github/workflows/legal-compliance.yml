@@ -1,0 +1,65 @@
+name: Legal Compliance Check
+
+on:
+  push:
+    branches: [ master, main, develop ]
+  pull_request:
+    branches: [ master, main, develop ]
+
+jobs:
+  legal-lint:
+    name: Legal Compliance Linter
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Run legal compliance linter
+        run: node scripts/legal-lint.js --verbose
+
+      - name: Upload results (if failed)
+        if: failure()
+        uses: actions/upload-artifact@v3
+        with:
+          name: legal-lint-results
+          path: |
+            scripts/legal-lint.js
+            scripts/__tests__/legal-lint.test.js
+
+  legal-tests:
+    name: Legal Linter Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Run linter tests
+        run: node scripts/__tests__/legal-lint.test.js
+
+  summary:
+    name: Summary
+    runs-on: ubuntu-latest
+    needs: [legal-lint, legal-tests]
+    if: always()
+
+    steps:
+      - name: Check job status
+        run: |
+          if [ "${{ needs.legal-lint.result }}" == "success" ] && [ "${{ needs.legal-tests.result }}" == "success" ]; then
+            echo "✅ All legal compliance checks passed!"
+          else
+            echo "❌ Legal compliance checks failed. Please review the errors above."
+            exit 1
+          fi

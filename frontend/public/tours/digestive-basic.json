@@ -1,0 +1,100 @@
+{
+  "id": "digestive-basic",
+  "systemId": "digestive",
+  "title": "Introduction to the Digestive System",
+  "description": "Discover how your body breaks down food and absorbs nutrients",
+  "level": "basic",
+  "estimatedMinutes": 20,
+  "prerequisites": [],
+  "learningObjectives": [
+    "Identify the major organs of the digestive system",
+    "Understand the pathway food takes through the digestive tract",
+    "Explain the roles of mechanical and chemical digestion",
+    "Describe how nutrients are absorbed into the bloodstream"
+  ],
+  "steps": [
+    {
+      "stepNumber": 1,
+      "title": "Introduction to the Digestive System",
+      "explanation": "# Your Body's Food Processing System\n\nThe digestive system breaks down food into nutrients your body can use for energy, growth, and repair. This complex process involves multiple organs working together.\n\n## Main Functions\n\n- **Ingestion** - Taking food into the mouth\n- **Digestion** - Breaking down food (mechanical and chemical)\n- **Absorption** - Transferring nutrients into the bloodstream\n- **Elimination** - Removing waste products\n\n## Two Types of Digestion\n\n### Mechanical Digestion\n- **Physical breakdown** of food\n- Chewing, churning, mixing\n- Makes food particles smaller\n\n### Chemical Digestion\n- **Enzymes** break molecular bonds\n- Converts complex molecules into simple ones\n- Proteins → amino acids\n- Carbohydrates → simple sugars\n- Fats → fatty acids and glycerol\n\n**Journey Time:** Food typically takes **24-72 hours** to travel through your entire digestive system!",
+      "highlightNodeIds": ["digestive-system"],
+      "overlayConfig": {
+        "intensity": 0.3,
+        "pulseAnimation": true
+      }
+    },
+    {
+      "stepNumber": 2,
+      "title": "The Mouth and Esophagus: Where Digestion Begins",
+      "explanation": "# Digestion Starts Here\n\nDigestion begins the moment food enters your mouth!\n\n## The Mouth (Oral Cavity)\n\n### Teeth\n- **Incisors:** Cut and tear food\n- **Canines:** Grip and tear\n- **Molars:** Crush and grind\n- Mechanical digestion starts here\n\n### Tongue\n- **Manipulates** food for chewing\n- **Mixes** food with saliva\n- Contains **taste buds** for flavor detection\n- Helps form **bolus** (food ball) for swallowing\n\n### Salivary Glands\n- Produce **saliva** (1-1.5 liters per day!)\n- Contains **amylase** enzyme\n- Begins **chemical digestion** of starches\n- Lubricates food for swallowing\n\n## The Esophagus\n\n- **Muscular tube** about 25 cm (10 inches) long\n- Connects mouth to stomach\n- **Peristalsis:** Wave-like muscle contractions push food down\n- Takes **5-10 seconds** to reach stomach\n- Can work against gravity - you can swallow upside down!\n\n**Fun Fact:** Saliva contains antibacterial compounds that help protect against infections!",
+      "highlightNodeIds": ["mouth", "salivary-glands", "esophagus"],
+      "overlayConfig": {
+        "intensity": 0.7
+      },
+      "evidenceLevel": "HIGH"
+    },
+    {
+      "stepNumber": 3,
+      "title": "The Stomach: Mixing and Breaking Down",
+      "explanation": "# The Stomach: Chemical Processing Center\n\nThe stomach is a muscular, J-shaped organ that continues the digestion process.\n\n## Structure\n\n- **Capacity:** About 1 liter (can expand to 4 liters!)\n- **Location:** Upper left abdomen\n- **Layers:** Three layers of muscle for powerful churning\n- **Lining:** Protected by thick mucus layer\n\n## Functions\n\n### Mechanical Digestion\n- **Churning:** Powerful muscle contractions mix food\n- Creates semi-liquid mixture called **chyme**\n- Breaks food into smaller particles\n\n### Chemical Digestion\n- **Gastric juice** contains:\n  - **Hydrochloric acid (HCl):** pH 1.5-3.5 (very acidic!)\n  - **Pepsin:** Enzyme that breaks down proteins\n  - **Gastric lipase:** Begins fat digestion\n\n### Storage\n- Holds food for **2-6 hours**\n- Releases chyme slowly into small intestine\n- Controls rate of digestion\n\n## Protection Mechanisms\n\n- **Mucus layer:** Protects stomach from its own acid\n- **Tight junctions:** Prevent acid leakage\n- Mucus layer replaced every **few days**\n\n**Amazing Fact:** Your stomach acid is strong enough to dissolve metal, but the protective mucus layer keeps your stomach safe!",
+      "highlightNodeIds": ["stomach"],
+      "overlayConfig": {
+        "intensity": 0.9,
+        "pulseAnimation": true
+      },
+      "evidenceLevel": "HIGH",
+      "interactivePrompt": "Why doesn't the stomach digest itself? The mucus barrier is constantly renewed to protect the stomach lining!"
+    },
+    {
+      "stepNumber": 4,
+      "title": "The Small Intestine: Nutrient Absorption Powerhouse",
+      "explanation": "# Small Intestine: Where Most Digestion Happens\n\nDespite its name, the small intestine is the **longest part** of the digestive tract!\n\n## Structure\n\n- **Length:** About 6 meters (20 feet) long\n- **Diameter:** About 2.5 cm (1 inch)\n- **Three sections:**\n  1. **Duodenum** (25 cm) - Receives chyme from stomach\n  2. **Jejunum** (2.5 m) - Main site of nutrient absorption\n  3. **Ileum** (3.5 m) - Absorbs remaining nutrients\n\n## Functions\n\n### Chemical Digestion (Completes Here)\n- **Pancreatic enzymes:** Break down proteins, carbs, fats\n- **Bile** (from liver): Emulsifies fats for digestion\n- **Intestinal enzymes:** Final breakdown of nutrients\n\n### Nutrient Absorption\n- **Villi:** Tiny finger-like projections line the intestine\n- **Microvilli:** Even smaller projections on villi\n- Creates **massive surface area** (about 250 m² - size of a tennis court!)\n- Nutrients absorbed into **bloodstream** through villi\n\n## What Gets Absorbed?\n\n- **Amino acids** (from proteins)\n- **Simple sugars** (from carbohydrates)\n- **Fatty acids and glycerol** (from fats)\n- **Vitamins and minerals**\n- **Water**\n\n**Efficiency:** The small intestine absorbs about **90% of nutrients** from your food!\n\n**Time Spent:** Food stays here for **3-5 hours** - most of the digestive journey!",
+      "highlightNodeIds": ["small-intestine", "duodenum", "jejunum", "ileum"],
+      "overlayConfig": {
+        "intensity": 0.8
+      },
+      "evidenceLevel": "HIGH",
+      "furtherReading": [
+        {
+          "title": "Intestinal Absorption Mechanisms",
+          "type": "textbook",
+          "citation": "Standard physiology textbook reference"
+        }
+      ]
+    },
+    {
+      "stepNumber": 5,
+      "title": "Accessory Organs: The Support Team",
+      "explanation": "# Organs That Help Digestion\n\nSeveral organs assist digestion without food passing through them directly.\n\n## The Liver\n\n### Functions\n- **Produces bile:** 500-1000 mL daily\n- **Processes nutrients:** From small intestine via blood\n- **Detoxifies** chemicals and metabolizes drugs\n- **Stores** vitamins and minerals\n- **Regulates** blood sugar levels\n\n### Bile Production\n- **Bile salts** emulsify fats (break into smaller droplets)\n- Makes fats easier for enzymes to digest\n- Stored in gallbladder until needed\n- **Yellow-green color** from breakdown of old red blood cells\n\n## The Gallbladder\n\n- **Stores and concentrates bile** from liver\n- **Size:** About 7-10 cm (like a small pear)\n- **Releases bile** into duodenum when fats are present\n- Contracts when stimulated by fatty food\n\n## The Pancreas\n\n### Dual Function Organ\n1. **Exocrine function** (digestion):\n   - Produces **pancreatic juice** (1.5 liters daily)\n   - Contains enzymes for proteins, carbs, and fats\n   - Releases into duodenum\n   - Neutralizes stomach acid with bicarbonate\n\n2. **Endocrine function** (hormones):\n   - Produces insulin and glucagon\n   - Regulates blood sugar\n   - Not part of digestion directly\n\n**Teamwork:** The liver, gallbladder, and pancreas all release their secretions into the duodenum (first part of small intestine) to help digest food!",
+      "highlightNodeIds": ["liver", "gallbladder", "pancreas"],
+      "overlayConfig": {
+        "intensity": 0.7,
+        "pulseAnimation": true
+      },
+      "evidenceLevel": "HIGH"
+    },
+    {
+      "stepNumber": 6,
+      "title": "The Large Intestine: Final Processing and Elimination",
+      "explanation": "# Large Intestine: Water Recovery and Waste Removal\n\nThe large intestine completes the digestive process.\n\n## Structure\n\n- **Length:** About 1.5 meters (5 feet)\n- **Diameter:** About 6-7 cm (2.5 inches) - wider than small intestine\n- **Sections:**\n  1. **Cecum** - Receives material from small intestine\n  2. **Colon** - Ascending, transverse, descending, sigmoid\n  3. **Rectum** - Storage for feces\n  4. **Anus** - Exit point\n\n## Functions\n\n### Water Absorption\n- Absorbs **1-2 liters** of water daily\n- Converts liquid waste to solid feces\n- Prevents dehydration\n\n### Bacterial Fermentation\n- Home to **trillions** of beneficial bacteria\n- **Gut microbiome** helps digest fiber\n- Produces **vitamins** (K, B12, thiamine)\n- Produces gases (methane, hydrogen sulfide)\n\n### Waste Storage and Elimination\n- **Feces** formed from:\n  - Undigested food (fiber)\n  - Bacteria (living and dead)\n  - Water\n  - Bile pigments (give brown color)\n- Stored in rectum until elimination\n\n## The Process\n\n1. Material enters from small intestine (liquid)\n2. Water absorbed as it moves through colon\n3. Becomes semi-solid, then solid\n4. Stored in rectum\n5. Eliminated through anus (defecation)\n\n**Time Spent:** Material stays in large intestine for **12-48 hours**\n\n**Complete Journey:** Mouth to elimination takes about **24-72 hours** total\n\n---\n\n### Educational Disclaimer\n\nThis tour provides educational information about digestive system anatomy and physiology. It is for learning purposes only and does not provide medical advice or diagnosis. For health questions, always consult qualified healthcare professionals.",
+      "highlightNodeIds": ["large-intestine", "colon", "rectum"],
+      "overlayConfig": {
+        "intensity": 0.6,
+        "pulseAnimation": true
+      },
+      "evidenceLevel": "HIGH",
+      "interactivePrompt": "Think about what you ate for breakfast. It's currently on a 1-3 day journey through your digestive system!"
+    }
+  ],
+  "metadata": {
+    "author": "HumanDNAVisualizer Education Team",
+    "createdDate": "2025-01-09",
+    "lastUpdated": "2025-01-09",
+    "version": "1.0.0",
+    "tags": ["digestive", "stomach", "intestine", "liver", "pancreas", "basic", "anatomy"],
+    "educationalStandards": [
+      "NGSS HS-LS1-2: Develop and use a model to illustrate hierarchical organization of interacting systems",
+      "AP Biology 2.B.2: Explain how growth and dynamic homeostasis are maintained in organisms"
+    ]
+  }
+}

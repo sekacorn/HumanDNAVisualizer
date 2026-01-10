@@ -1,0 +1,82 @@
+{
+  "version": "1.0.0",
+  "lastUpdated": "2025-01-09",
+  "tours": [
+    {
+      "id": "cardiovascular-basic",
+      "systemId": "cardiovascular",
+      "title": "Introduction to the Cardiovascular System",
+      "description": "Learn about the heart, blood vessels, and how blood circulates through your body",
+      "level": "basic",
+      "estimatedMinutes": 15,
+      "thumbnailUrl": "/images/systems/cardiovascular-thumb.png",
+      "tags": ["cardiovascular", "heart", "blood", "circulation", "basic", "anatomy"]
+    },
+    {
+      "id": "nervous-basic",
+      "systemId": "nervous",
+      "title": "Introduction to the Nervous System",
+      "description": "Explore the brain, spinal cord, and nerves that control your body",
+      "level": "basic",
+      "estimatedMinutes": 18,
+      "thumbnailUrl": "/images/systems/nervous-thumb.png",
+      "tags": ["nervous", "brain", "neurons", "spinal-cord", "basic", "anatomy"]
+    },
+    {
+      "id": "digestive-basic",
+      "systemId": "digestive",
+      "title": "Introduction to the Digestive System",
+      "description": "Discover how your body breaks down food and absorbs nutrients",
+      "level": "basic",
+      "estimatedMinutes": 20,
+      "thumbnailUrl": "/images/systems/digestive-thumb.png",
+      "tags": ["digestive", "stomach", "intestine", "liver", "pancreas", "basic", "anatomy"]
+    }
+  ],
+  "systems": [
+    {
+      "id": "cardiovascular",
+      "name": "Cardiovascular System",
+      "description": "The heart and blood vessels that transport blood throughout the body",
+      "availableLevels": ["basic"],
+      "icon": "heart"
+    },
+    {
+      "id": "nervous",
+      "name": "Nervous System",
+      "description": "The brain, spinal cord, and nerves that control and coordinate body activities",
+      "availableLevels": ["basic"],
+      "icon": "brain"
+    },
+    {
+      "id": "digestive",
+      "name": "Digestive System",
+      "description": "The organs that break down food and absorb nutrients",
+      "availableLevels": ["basic"],
+      "icon": "digestive"
+    }
+  ],
+  "levels": [
+    {
+      "id": "basic",
+      "name": "Basic",
+      "description": "Introduction to fundamental concepts and structures",
+      "prerequisites": [],
+      "targetAudience": "High school students, general public"
+    },
+    {
+      "id": "intermediate",
+      "name": "Intermediate",
+      "description": "Deeper exploration of mechanisms and interactions",
+      "prerequisites": ["basic"],
+      "targetAudience": "College students, advanced learners"
+    },
+    {
+      "id": "advanced",
+      "name": "Advanced",
+      "description": "Detailed analysis of complex processes and clinical connections",
+      "prerequisites": ["basic", "intermediate"],
+      "targetAudience": "Medical students, professionals"
+    }
+  ]
+}

@@ -1,0 +1,99 @@
+{
+  "id": "nervous-basic",
+  "systemId": "nervous",
+  "title": "Introduction to the Nervous System",
+  "description": "Explore the brain, spinal cord, and nerves that control your body",
+  "level": "basic",
+  "estimatedMinutes": 18,
+  "prerequisites": [],
+  "learningObjectives": [
+    "Identify the major divisions of the nervous system",
+    "Understand basic neuron structure and function",
+    "Explain how signals travel through the nervous system",
+    "Recognize major brain regions and their roles"
+  ],
+  "steps": [
+    {
+      "stepNumber": 1,
+      "title": "Introduction to the Nervous System",
+      "explanation": "# Your Body's Communication Network\n\nThe nervous system is your body's control center and communication network. It allows you to:\n\n- **Think** and make decisions\n- **Feel** sensations (touch, pain, temperature)\n- **Move** voluntarily and involuntarily  \n- **React** to your environment\n- **Maintain** automatic functions (breathing, heartbeat)\n\n## Two Main Divisions\n\n### Central Nervous System (CNS)\n- **Brain** - Control center for all activities\n- **Spinal Cord** - Information highway between brain and body\n\n### Peripheral Nervous System (PNS)\n- **Nerves** throughout the body\n- Connect CNS to every part of your body\n\n**Speed Fact:** Nerve signals can travel up to **120 meters per second** - that's faster than a race car!",
+      "highlightNodeIds": ["nervous-system"],
+      "overlayConfig": {
+        "intensity": 0.3,
+        "pulseAnimation": true
+      }
+    },
+    {
+      "stepNumber": 2,
+      "title": "The Neuron: Building Block of the Nervous System",
+      "explanation": "# Neuron Structure\n\nNeurons (nerve cells) are specialized cells that transmit electrical and chemical signals. A typical neuron has several parts:\n\n## Main Components\n\n### Cell Body (Soma)\n- Contains the **nucleus** and cellular machinery\n- Integrates incoming signals\n- Maintains cell health\n\n### Dendrites\n- **Branch-like extensions** from cell body\n- **Receive** signals from other neurons\n- Like \"antennae\" picking up information\n\n### Axon\n- **Long fiber** extending from cell body\n- **Transmits** signals away from cell body\n- Can be over 1 meter long!\n- Often covered with **myelin** (insulation)\n\n### Axon Terminals (Synapses)\n- **End branches** of the axon\n- Release **chemical messengers** to communicate\n- Connect to next neuron's dendrites\n\n## Types of Neurons\n\n- **Sensory:** Carry information TO the brain (touch, pain, etc.)\n- **Motor:** Carry commands FROM the brain (movement)\n- **Interneurons:** Connect neurons within the CNS\n\n**Fun Fact:** You have about **86 billion neurons** in your brain alone!",
+      "highlightNodeIds": ["neuron-diagram"],
+      "overlayConfig": {
+        "intensity": 0.8
+      },
+      "evidenceLevel": "HIGH"
+    },
+    {
+      "stepNumber": 3,
+      "title": "How Signals Travel: Electrical and Chemical",
+      "explanation": "# Signal Transmission in Neurons\n\nNeurons communicate using both electrical and chemical signals:\n\n## Electrical Signals (Along the Axon)\n\n### Action Potential\n- An **electrical impulse** travels along the axon\n- \"All-or-nothing\" - either fires completely or not at all\n- Travels in **one direction** only\n- Speed: 1-120 meters per second\n\n### How It Works\n1. Neuron at rest: negative inside, positive outside\n2. Stimulus triggers **ion channels** to open\n3. Positive ions rush in → electrical pulse\n4. Pulse travels down entire axon\n5. Neuron resets and is ready for next signal\n\n## Chemical Signals (Across the Synapse)\n\n### Synaptic Transmission\n1. Electrical signal reaches **axon terminal**\n2. Triggers release of **neurotransmitters** (chemical messengers)\n3. Neurotransmitters cross tiny gap (**synaptic cleft**)\n4. Bind to **receptors** on next neuron's dendrites\n5. May trigger new electrical signal in next neuron\n\n**Why Two Types?** Electrical signals are fast within a cell, but chemical signals allow for complex communication between cells and can be excitatory (\"go!\") or inhibitory (\"stop!\").",
+      "highlightNodeIds": ["synapse-detail"],
+      "overlayConfig": {
+        "intensity": 0.9
+      },
+      "evidenceLevel": "HIGH",
+      "interactivePrompt": "Think about touching something hot. How quickly do you pull your hand away? That's your nervous system at work!"
+    },
+    {
+      "stepNumber": 4,
+      "title": "The Brain: Major Regions",
+      "explanation": "# Brain Structure and Function\n\nThe brain is the most complex organ in your body. Let's explore its major regions:\n\n## Cerebrum (Largest Part)\n- **Outer layer:** Cerebral cortex (gray matter)\n- **Functions:** Thinking, memory, language, voluntary movement\n- **Two hemispheres:** Left and right, connected by corpus callosum\n- **Four lobes:** Frontal, parietal, temporal, occipital\n\n### Key Areas\n- **Frontal Lobe:** Planning, decision-making, personality\n- **Parietal Lobe:** Touch, spatial awareness\n- **Temporal Lobe:** Hearing, memory\n- **Occipital Lobe:** Vision\n\n## Cerebellum (\"Little Brain\")\n- Located at back of brain\n- **Functions:** Coordination, balance, fine motor control\n- Helps you walk smoothly and catch a ball\n\n## Brain Stem\n- Connects brain to spinal cord\n- **Functions:** Automatic life-sustaining processes\n- Controls: Breathing, heart rate, blood pressure, swallowing\n- **Always active** - even when you sleep!\n\n**Size Fact:** Your brain weighs about **1.4 kg (3 pounds)** but uses **20% of your body's energy**!",
+      "highlightNodeIds": ["brain", "cerebrum", "cerebellum", "brain-stem"],
+      "overlayConfig": {
+        "intensity": 0.8,
+        "pulseAnimation": true
+      },
+      "evidenceLevel": "HIGH",
+      "furtherReading": [
+        {
+          "title": "Brain Anatomy and Function",
+          "type": "textbook",
+          "citation": "Standard neuroscience textbook reference"
+        }
+      ]
+    },
+    {
+      "stepNumber": 5,
+      "title": "The Spinal Cord: Information Highway",
+      "explanation": "# Spinal Cord Structure and Function\n\nThe spinal cord is a long, thin bundle of nerves that extends from the brain down your back.\n\n## Structure\n- **Length:** About 45 cm (18 inches) in adults\n- **Protected by:** Vertebral column (spine)\n- **Composition:** Millions of nerve fibers\n\n## Functions\n\n### 1. Communication Pathway\n- **Ascending tracts:** Carry sensory information TO the brain\n- **Descending tracts:** Carry motor commands FROM the brain\n- Two-way information highway\n\n### 2. Reflex Center\n- Some responses don't need the brain!\n- **Spinal reflexes** happen automatically\n- Example: Pulling hand away from hot object\n\n## Spinal Nerves\n- **31 pairs** of spinal nerves exit the spinal cord\n- Connect to different body regions\n- Each serves specific area:\n  - **Cervical (C1-C8):** Neck, arms, hands\n  - **Thoracic (T1-T12):** Chest, upper back\n  - **Lumbar (L1-L5):** Lower back, legs\n  - **Sacral (S1-S5):** Pelvis, feet\n\n**Protection:** The spinal cord is protected by bone (vertebrae), three membranes (meninges), and cerebrospinal fluid.",
+      "highlightNodeIds": ["spinal-cord", "spinal-nerves"],
+      "overlayConfig": {
+        "intensity": 0.7
+      },
+      "evidenceLevel": "HIGH",
+      "interactivePrompt": "Try this: Tap your knee just below the kneecap. Your leg kicks! That's a spinal reflex - your spinal cord responds without waiting for your brain."
+    },
+    {
+      "stepNumber": 6,
+      "title": "Putting It All Together: Sensory and Motor Pathways",
+      "explanation": "# How the Nervous System Controls Your Body\n\nLet's trace a complete pathway from sensation to action:\n\n## Sensory Pathway (Input)\n1. **Stimulus:** You touch something (e.g., a warm mug)\n2. **Receptors:** Specialized nerve endings in skin detect warmth\n3. **Sensory neurons:** Carry signal from skin to spinal cord\n4. **Spinal cord:** Signal travels up to brain\n5. **Brain:** Interprets signal as \"warmth\"\n6. **Perception:** You consciously feel the warmth\n\n## Motor Pathway (Output)\n1. **Decision:** Brain decides to pick up the mug\n2. **Motor cortex:** Sends command signal\n3. **Spinal cord:** Signal travels down\n4. **Motor neurons:** Carry command from spinal cord to muscles\n5. **Muscles:** Hand muscles contract\n6. **Action:** You grasp and lift the mug\n\n## Integration\n- Happens constantly and automatically\n- **Feedback loops:** Sensory input adjusts motor output\n- **Example:** If mug is too hot, you adjust grip or put it down\n\n**Coordination is Key:** Walking requires coordination of thousands of neurons controlling hundreds of muscles - all happening automatically while you think about something else!\n\n---\n\n### Educational Disclaimer\n\nThis tour provides educational information about nervous system anatomy and physiology. It is for learning purposes only and does not provide medical advice or diagnosis. For health questions, always consult qualified healthcare professionals.",
+      "highlightNodeIds": ["brain", "spinal-cord", "peripheral-nerves"],
+      "overlayConfig": {
+        "intensity": 0.6,
+        "pulseAnimation": true
+      },
+      "evidenceLevel": "HIGH"
+    }
+  ],
+  "metadata": {
+    "author": "HumanDNAVisualizer Education Team",
+    "createdDate": "2025-01-09",
+    "lastUpdated": "2025-01-09",
+    "version": "1.0.0",
+    "tags": ["nervous", "brain", "neurons", "spinal-cord", "basic", "anatomy"],
+    "educationalStandards": [
+      "NGSS HS-LS1-2: Develop and use a model to illustrate hierarchical organization of interacting systems",
+      "AP Biology 3.E.2: Explain how the activities of organisms are responses to internal or external cues"
+    ]
+  }
+}

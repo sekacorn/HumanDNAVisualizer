@@ -1,0 +1,95 @@
+{
+  "nodes": [
+    {
+      "id": "cardiovascular_system",
+      "type": "SYSTEM",
+      "label": "Cardiovascular System"
+    },
+    {
+      "id": "metabolic_system",
+      "type": "SYSTEM",
+      "label": "Metabolic System"
+    },
+    {
+      "id": "nervous_system",
+      "type": "SYSTEM",
+      "label": "Nervous System"
+    },
+    {
+      "id": "brain",
+      "type": "ORGAN",
+      "label": "Brain"
+    },
+    {
+      "id": "heart",
+      "type": "ORGAN",
+      "label": "Heart"
+    },
+    {
+      "id": "liver",
+      "type": "ORGAN",
+      "label": "Liver"
+    },
+    {
+      "id": "hepatocytes",
+      "type": "SUBSTRUCTURE",
+      "label": "Hepatocytes"
+    },
+    {
+      "id": "hippocampus",
+      "type": "SUBSTRUCTURE",
+      "label": "Hippocampus"
+    },
+    {
+      "id": "left_ventricle",
+      "type": "SUBSTRUCTURE",
+      "label": "Left Ventricle"
+    }
+  ],
+  "edges": [
+    {
+      "from": "brain",
+      "to": "hippocampus",
+      "relation": "contains"
+    },
+    {
+      "from": "cardiovascular_system",
+      "to": "heart",
+      "relation": "contains"
+    },
+    {
+      "from": "heart",
+      "to": "left_ventricle",
+      "relation": "contains"
+    },
+    {
+      "from": "liver",
+      "to": "hepatocytes",
+      "relation": "contains"
+    },
+    {
+      "from": "metabolic_system",
+      "to": "liver",
+      "relation": "contains"
+    },
+    {
+      "from": "nervous_system",
+      "to": "brain",
+      "relation": "contains"
+    }
+  ],
+  "overlays": [
+    {
+      "targetNodeId": "cardiovascular_system",
+      "intensity": 0.6,
+      "label": "Variant in genomic region associated with cardiovascular structure",
+      "evidence": "LOW",
+      "sources": [
+        "Demo data - placeholder reference"
+      ]
+    }
+  ],
+  "sampleId": 1,
+  "rulesVersion": "1.0.0",
+  "disclaimer": "Educational/research visualization only. Not for medical diagnosis, treatment decisions, or lifestyle recommendations. All associations are labeled with evidence quality and represent preliminary research findings that require validation."
+}

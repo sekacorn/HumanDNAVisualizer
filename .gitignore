@@ -6,6 +6,8 @@ target/
 __pycache__/
 venv/
 env/
+*.pyc
+.Python
 
 # ======================
 # Build outputs
@@ -17,6 +19,9 @@ build/
 *.war
 *.ear
 !gradle-wrapper.jar
+*.nar
+*.so
+*.dylib
 
 # ======================
 # IDE / Editor
@@ -27,6 +32,14 @@ build/
 *.swo
 *~
 .DS_Store
+*.iml
+*.ipr
+*.iws
+.project
+.classpath
+.settings/
+nbproject/
+.metadata/
 
 # ======================
 # Environment / Secrets
@@ -34,23 +47,31 @@ build/
 .env
 .env.*
 !.env.example
+application-local.yml
+application-secret.yml
 
 # ======================
 # Logs
 # ======================
 *.log
 logs/
+spring.log
 
 # ======================
 # Databases
 # ======================
 *.db
 *.sqlite
+*.h2.db
+h2/
+data/
 
 # ======================
 # OS
 # ======================
 Thumbs.db
+.DS_Store
+desktop.ini
 
 # ======================
 # Temp / Cache
@@ -58,3 +79,39 @@ Thumbs.db
 tmp/
 .cache/
 downloads/
+uploads/
+
+# ======================
+# Maven
+# ======================
+.mvn/
+mvnw
+mvnw.cmd
+
+# ======================
+# npm / Node
+# ======================
+package-lock.json
+.npm
+.eslintcache
+.node_repl_history
+
+# ======================
+# Test outputs
+# ======================
+test-output/
+coverage/
+.nyc_output/
+*.lcov
+
+# ======================
+# Application specific
+# ======================
+# User uploaded genomic data (privacy)
+/backend/dna-integrator/uploads/
+/backend/dna-integrator/data/
+# Generated test files
+/backend/dna-integrator/test-results/
+# H2 database files
+*.mv.db
+*.trace.db

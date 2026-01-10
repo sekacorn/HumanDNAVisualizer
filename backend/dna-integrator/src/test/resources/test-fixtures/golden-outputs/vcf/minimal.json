@@ -1,0 +1,22 @@
+[
+  {
+    "chrom": "1",
+    "pos": 1000,
+    "id": "rs123",
+    "ref": "A",
+    "alt": "G",
+    "quality": 30.0,
+    "genotype": "0/1",
+    "source": "vcf"
+  },
+  {
+    "chrom": "2",
+    "pos": 2000,
+    "id": "rs456",
+    "ref": "C",
+    "alt": "T",
+    "quality": 40.0,
+    "genotype": "1/1",
+    "source": "vcf"
+  }
+]

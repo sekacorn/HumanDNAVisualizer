@@ -25,6 +25,15 @@ const llmClient = axios.create({
   },
 });
 
+const EXPLAINER_BASE_URL = import.meta.env.VITE_EXPLAINER_URL || 'http://localhost:8003';
+
+const explainerClient = axios.create({
+  baseURL: EXPLAINER_BASE_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
 // Data Upload APIs
 export const uploadVCF = async (file, userId) => {
   const formData = new FormData();
@@ -77,6 +86,62 @@ export const queryLLM = async (queryRequest) => {
   return llmClient.post('/query', queryRequest);
 };
 
+// Anatomy Graph APIs
+export const getAnatomyGraph = async (sampleId) => {
+  return apiClient.get(`/anatomygraph/${sampleId}`);
+};
+
+export const getAnatomyGraphStats = async (sampleId) => {
+  return apiClient.get(`/anatomygraph/${sampleId}/stats`);
+};
+
+// Sample Management APIs
+export const listUserSamples = async (userId) => {
+  return apiClient.get(`/samples/user/${userId}`);
+};
+
+export const getSample = async (sampleId) => {
+  return apiClient.get(`/samples/${sampleId}`);
+};
+
+export const deleteSample = async (sampleId) => {
+  return apiClient.delete(`/samples/${sampleId}`);
+};
+
+// Import APIs (using existing ImportController endpoints)
+export const importVCF = async (file, userId) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('userId', userId);
+
+  return apiClient.post('/import/vcf', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+
+export const importGenotype = async (file, userId) => {
+  const formData = new FormData();
+  formData.append('file', file);
+  formData.append('userId', userId);
+
+  return apiClient.post('/import/genotype', formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
+  });
+};
+
+// Explainer APIs
+export const explainVisualization = async (anatomyGraph, userQuestion = null, style = 'detailed') => {
+  return explainerClient.post('/explain', {
+    anatomyGraph,
+    userQuestion,
+    style
+  });
+};
+
 export default {
   uploadVCF,
   uploadFHIR,
@@ -86,4 +151,12 @@ export default {
   getEnvironmentalData,
   predictTraits,
   queryLLM,
+  getAnatomyGraph,
+  getAnatomyGraphStats,
+  listUserSamples,
+  getSample,
+  deleteSample,
+  importVCF,
+  importGenotype,
+  explainVisualization,
 };

@@ -1,0 +1,6 @@
+rsid	chromosome	position	genotype
+rs4477212	1	82154	AA
+rs3094315	1	invalid_pos	AG
+rs3131972		752721	GG
+rs12124819	1	776546
+rs11240777	1	798959	GG

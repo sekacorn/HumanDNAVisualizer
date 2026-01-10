@@ -3,9 +3,15 @@ import { useState, useEffect } from 'react'
 import Home from './pages/Home'
 import Analyze from './pages/Analyze'
 import Explore from './pages/Explore'
+import AnatomyViewer from './pages/AnatomyViewer'
+import Import from './pages/Import'
+import Samples from './pages/Samples'
+import LearnMode from './pages/LearnMode'
+import TourViewer from './pages/TourViewer'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import ProtectedRoute from './components/ProtectedRoute'
+import DisclaimerBanner from './components/DisclaimerBanner'
 import authService from './services/authService'
 import './App.css'
 
@@ -44,8 +50,20 @@ function Navigation() {
             <Link to="/" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition">
               Home
             </Link>
+            <Link to="/learn" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition">
+              Learn
+            </Link>
             {isAuthenticated ? (
               <>
+                <Link to="/import" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition">
+                  Import
+                </Link>
+                <Link to="/samples" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition">
+                  Samples
+                </Link>
+                <Link to="/anatomy" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition">
+                  Anatomy View
+                </Link>
                 <Link to="/analyze" className="text-gray-300 hover:text-white px-3 py-2 rounded-md text-sm font-medium transition">
                   Analyze
                 </Link>
@@ -93,12 +111,15 @@ function App() {
   return (
     <Router>
       <div className="min-h-screen bg-gradient-to-br from-gray-900 via-blue-900 to-gray-900">
+        <DisclaimerBanner />
         <Navigation />
 
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
+          <Route path="/learn" element={<LearnMode />} />
+          <Route path="/learn/tour/:tourId" element={<TourViewer />} />
           <Route
             path="/analyze"
             element={
@@ -112,6 +133,30 @@ function App() {
             element={
               <ProtectedRoute>
                 <Explore />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/anatomy"
+            element={
+              <ProtectedRoute>
+                <AnatomyViewer />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/import"
+            element={
+              <ProtectedRoute>
+                <Import />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/samples"
+            element={
+              <ProtectedRoute>
+                <Samples />
               </ProtectedRoute>
             }
           />

@@ -58,6 +58,12 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- Flyway for database migrations -->
+        <dependency>
+            <groupId>org.flywaydb</groupId>
+            <artifactId>flyway-core</artifactId>
+        </dependency>
+
         <!-- HAPI FHIR for parsing FHIR-compliant health records -->
         <dependency>
             <groupId>ca.uhn.hapi.fhir</groupId>

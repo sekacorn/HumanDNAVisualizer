@@ -1,0 +1,32 @@
+[
+  {
+    "chrom": "1",
+    "pos": 1000,
+    "id": "rs123",
+    "ref": "A",
+    "alt": "G",
+    "quality": null,
+    "genotype": "AG",
+    "source": "generic_tsv"
+  },
+  {
+    "chrom": "2",
+    "pos": 2000,
+    "id": "rs456",
+    "ref": "T",
+    "alt": "T",
+    "quality": null,
+    "genotype": "TT",
+    "source": "generic_tsv"
+  },
+  {
+    "chrom": "3",
+    "pos": 3000,
+    "id": "rs789",
+    "ref": "C",
+    "alt": "C",
+    "quality": null,
+    "genotype": "CC",
+    "source": "generic_tsv"
+  }
+]

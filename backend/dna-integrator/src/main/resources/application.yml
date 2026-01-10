@@ -33,6 +33,28 @@ upload:
 security:
   allowed-origins: ${ALLOWED_ORIGINS:http://localhost:3000}
 
+  # File handling security
+  file-handling:
+    store-raw-uploads: false                # DEFAULT: false - Raw files discarded after import
+    raw-file-storage-path: ./secure-uploads # Only used if store-raw-uploads=true
+    encrypt-stored-files: true              # Only used if store-raw-uploads=true
+    max-storage-days: 30                    # Auto-delete files older than this
+
+  # Network security (no external calls by default)
+  network:
+    enable-remote-llm: false                # DEFAULT: false - No LLM API calls
+    enable-external-apis: false             # DEFAULT: false - No external data fetches
+
+  # Data encryption
+  encryption:
+    enabled: false                          # Field-level encryption (requires DB_ENCRYPTION_KEY)
+    algorithm: AES-256-GCM
+
+  # Privacy settings
+  privacy:
+    minimal-logging: true                   # Don't log sensitive data
+    gdpr-mode: true                         # Enable data deletion features
+
 # Demo Mode Configuration (DISABLED for production)
 app:
   demo-mode:
