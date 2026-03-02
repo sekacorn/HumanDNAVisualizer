@@ -30,6 +30,22 @@ All visualizations, mappings, and AI-generated explanations are **informational*
 ![HumanDNAVisualizer Application](Screenshot-1.png)
 *HumanDNAVisualizer - Interactive 3D anatomy visualization with genomic variant overlays, data import dashboard, and educational learn mode*
 
+### Additional Views
+![HumanDNAVisualizer - View 1a](screenshot-1a.jpg)
+*Alternate view highlighting UI layout and navigation*
+
+![HumanDNAVisualizer - View 1b](screenshot-1b.jpg)
+*Detail view of the 3D visualization panel*
+
+![HumanDNAVisualizer - View 1c](screenshot-1c.jpg)
+*Data import and mapping workflow*
+
+![HumanDNAVisualizer - View 1d](screenshot-1d.jpg)
+*Evidence-labeled overlay and explainability panel*
+
+![HumanDNAVisualizer - View 1e](screenshot-1e.jpg)
+*Learn mode guided exploration view*
+
 ---
 
 ## Overview
