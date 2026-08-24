@@ -115,3 +115,9 @@ coverage/
 # H2 database files
 *.mv.db
 *.trace.db
+
+# Frontend demo mode (mock API, no backend required) — safe to commit, contains no secrets
+!frontend/.env.demo
+
+# Claude Code local session files
+.claude/

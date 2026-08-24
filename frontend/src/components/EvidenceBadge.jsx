@@ -9,21 +9,24 @@ import PropTypes from 'prop-types'
 
 const EVIDENCE_STYLES = {
   HIGH: {
-    bg: 'bg-green-900 bg-opacity-30',
-    border: 'border-green-500',
-    text: 'text-green-400',
+    bg: 'bg-adenine-emerald/10',
+    border: 'border-adenine-emerald/40',
+    text: 'text-adenine-emerald',
+    dot: 'bg-adenine-emerald',
     label: 'High'
   },
   MEDIUM: {
-    bg: 'bg-amber-900 bg-opacity-30',
-    border: 'border-amber-500',
-    text: 'text-amber-400',
+    bg: 'bg-guanine-amber/10',
+    border: 'border-guanine-amber/40',
+    text: 'text-guanine-amber',
+    dot: 'bg-guanine-amber',
     label: 'Medium'
   },
   LOW: {
-    bg: 'bg-blue-900 bg-opacity-30',
-    border: 'border-blue-500',
-    text: 'text-blue-400',
+    bg: 'bg-cytosine-azure/10',
+    border: 'border-cytosine-azure/40',
+    text: 'text-cytosine-azure',
+    dot: 'bg-cytosine-azure',
     label: 'Low'
   }
 }
@@ -40,10 +43,9 @@ function EvidenceBadge({ level, showLabel = true, size = 'md', className = '' })
   return (
     <span
       className={`
-        inline-flex items-center gap-1.5 rounded-md border
+        inline-flex items-center gap-1.5 rounded border font-label-caps uppercase tracking-wider
         ${style.bg} ${style.border} ${style.text}
         ${sizeClasses[size]}
-        font-semibold
         ${className}
       `}
       role="status"
@@ -51,7 +53,7 @@ function EvidenceBadge({ level, showLabel = true, size = 'md', className = '' })
     >
       {/* Visual indicator dot */}
       <span
-        className={`w-2 h-2 rounded-full ${style.text.replace('text-', 'bg-')}`}
+        className={`h-2 w-2 rounded-full ${style.dot}`}
         aria-hidden="true"
       />
 

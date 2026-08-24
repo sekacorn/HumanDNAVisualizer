@@ -68,7 +68,7 @@ describe('Stepper Component', () => {
       const buttons = container.querySelectorAll('button')
       const step2Button = Array.from(buttons).find(btn => btn.textContent.includes('Main Concepts'))
 
-      expect(step2Button).toHaveClass('bg-blue-600')
+      expect(step2Button).toHaveClass('bg-cytosine-azure')
     })
 
     it('should mark completed steps with checkmarks', () => {
@@ -86,7 +86,7 @@ describe('Stepper Component', () => {
       const buttons = container.querySelectorAll('button')
       const step3Button = Array.from(buttons).find(btn => btn.textContent.includes('Advanced Topics'))
 
-      expect(step3Button).toHaveClass('bg-gray-700')
+      expect(step3Button).toHaveClass('bg-surface-container-high')
     })
   })
 
@@ -156,18 +156,18 @@ describe('Stepper Component', () => {
 
       const buttons = container.querySelectorAll('button')
 
-      // Step 1 (completed) - should have green
+      // Step 1 (completed) - should have emerald
       const step1Button = Array.from(buttons).find(btn => btn.textContent.includes('Introduction'))
-      expect(step1Button.querySelector('.bg-green-600')).toBeInTheDocument()
+      expect(step1Button.querySelector('.bg-adenine-emerald')).toBeInTheDocument()
 
-      // Step 2 (active) - should have blue
+      // Step 2 (active) - should have azure
       const step2Button = Array.from(buttons).find(btn => btn.textContent.includes('Main Concepts'))
-      expect(step2Button.classList.contains('bg-blue-900') ||
-             step2Button.querySelector('.bg-blue-600')).toBeTruthy()
+      expect(step2Button.classList.contains('bg-cytosine-azure/10') ||
+             step2Button.querySelector('.bg-cytosine-azure')).toBeTruthy()
 
-      // Step 3 (future) - should have gray
+      // Step 3 (future) - should have the neutral surface tone
       const step3Button = Array.from(buttons).find(btn => btn.textContent.includes('Advanced Topics'))
-      expect(step3Button.querySelector('.bg-gray-700')).toBeInTheDocument()
+      expect(step3Button.querySelector('.bg-surface-container-high')).toBeInTheDocument()
     })
   })
 
@@ -241,14 +241,14 @@ describe('Stepper Component', () => {
     it('should have desktop-specific layout classes', () => {
       const { container } = render(<Stepper steps={mockSteps} currentStep={0} />)
 
-      const desktopView = container.querySelector('.hidden.md\\:block')
+      const desktopView = container.querySelector('.hidden.lg\\:block')
       expect(desktopView).toBeInTheDocument()
     })
 
     it('should have mobile-specific layout classes', () => {
       const { container } = render(<Stepper steps={mockSteps} currentStep={0} />)
 
-      const mobileView = container.querySelector('.md\\:hidden')
+      const mobileView = container.querySelector('.lg\\:hidden')
       expect(mobileView).toBeInTheDocument()
     })
   })

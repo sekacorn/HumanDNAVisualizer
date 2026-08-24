@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react'
 import { Link } from 'react-router-dom'
 import VisualizationDisclaimer from '../components/VisualizationDisclaimer'
+import Icon from '../components/ui/Icon'
+import PageHeader from '../components/ui/PageHeader'
 
 /**
  * Learn Mode Landing Page
@@ -8,6 +10,21 @@ import VisualizationDisclaimer from '../components/VisualizationDisclaimer'
  * Browse available guided tours through anatomical systems.
  * Educational content only - not for medical diagnosis or treatment.
  */
+
+/** Level tones read as a difficulty ramp: emerald → amber → crimson. */
+const LEVEL_TONES = {
+  basic: 'border-adenine-emerald/40 bg-adenine-emerald/10 text-adenine-emerald',
+  intermediate: 'border-guanine-amber/40 bg-guanine-amber/10 text-guanine-amber',
+  advanced: 'border-thymine-crimson/40 bg-thymine-crimson/10 text-thymine-crimson',
+}
+
+const SYSTEM_VISUALS = {
+  cardiovascular: { icon: 'cardiology', accent: 'text-thymine-crimson', wash: 'from-thymine-crimson/25' },
+  nervous: { icon: 'neurology', accent: 'text-cytosine-azure', wash: 'from-cytosine-azure/25' },
+  digestive: { icon: 'gastroenterology', accent: 'text-guanine-amber', wash: 'from-guanine-amber/25' },
+}
+
+const DEFAULT_VISUAL = { icon: 'school', accent: 'text-secondary', wash: 'from-secondary/25' }
 
 function LearnMode() {
   const [tourIndex, setTourIndex] = useState(null)
@@ -48,44 +65,17 @@ function LearnMode() {
     return levelMatch && systemMatch
   }) || []
 
-  // Get level badge color
-  const getLevelColor = (level) => {
-    switch (level) {
-      case 'basic':
-        return 'bg-green-900 bg-opacity-30 border-green-500 text-green-400'
-      case 'intermediate':
-        return 'bg-amber-900 bg-opacity-30 border-amber-500 text-amber-400'
-      case 'advanced':
-        return 'bg-red-900 bg-opacity-30 border-red-500 text-red-400'
-      default:
-        return 'bg-blue-900 bg-opacity-30 border-blue-500 text-blue-400'
-    }
-  }
+  const levelTone = (level) =>
+    LEVEL_TONES[level] || 'border-glass-border bg-white/5 text-on-surface-variant'
 
-  // Get system color
-  const getSystemColor = (systemId) => {
-    switch (systemId) {
-      case 'cardiovascular':
-        return 'from-red-500 to-pink-500'
-      case 'nervous':
-        return 'from-purple-500 to-blue-500'
-      case 'digestive':
-        return 'from-amber-500 to-orange-500'
-      default:
-        return 'from-blue-500 to-purple-500'
-    }
-  }
+  const visualFor = (systemId) => SYSTEM_VISUALS[systemId] || DEFAULT_VISUAL
 
   // Loading state
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex items-center justify-center h-96">
-          <div className="text-center">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
-            <div className="text-xl text-gray-400">Loading tours...</div>
-          </div>
-        </div>
+      <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4">
+        <Icon name="progress_activity" size={44} className="animate-spin text-cytosine-azure" />
+        <p className="font-code-mono text-sm text-on-surface-variant">Loading tours…</p>
       </div>
     )
   }
@@ -93,72 +83,85 @@ function LearnMode() {
   // Error state
   if (error) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="card bg-red-900 bg-opacity-20 border-red-500">
-          <h2 className="text-2xl font-bold text-red-400 mb-2">Error Loading Tours</h2>
-          <p className="text-gray-300">{error}</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
-          >
-            Retry
-          </button>
+      <div className="glass-panel rounded-card border-l-2 !border-l-error p-card-padding">
+        <div className="flex items-start gap-3">
+          <Icon name="error" size={22} className="mt-0.5 shrink-0 text-error" />
+          <div>
+            <h2 className="font-label-caps text-label-caps uppercase text-error">
+              Error loading tours
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">{error}</p>
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="btn-ghost mt-4"
+            >
+              <Icon name="refresh" size={16} />
+              Retry
+            </button>
+          </div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
-          Learn Mode
-        </h1>
-        <p className="text-gray-400 text-lg">
-          Guided tours through human anatomy and physiology
-        </p>
-      </div>
+    <div className="space-y-bento-gap">
+      <PageHeader
+        eyebrow="Learn mode"
+        title="Guided tours"
+        subtitle="Step through human anatomy and physiology at your own pace."
+        actions={
+          <span className="rounded-full border border-glass-border bg-white/[0.03] px-3 py-1.5 font-code-mono text-xs text-on-surface-variant">
+            {filteredTours.length} of {tourIndex?.tours?.length || 0} tours
+          </span>
+        }
+      />
 
-      {/* Educational Disclaimer */}
-      <div className="mb-8">
-        <VisualizationDisclaimer />
-      </div>
+      <VisualizationDisclaimer />
 
       {/* Filters */}
-      <div className="card mb-8">
-        <h3 className="text-lg font-bold text-white mb-4">Filter Tours</h3>
-        <div className="grid md:grid-cols-2 gap-4">
-          {/* Level Filter */}
+      <section className="glass-panel rounded-card p-card-padding">
+        <h2 className="font-label-caps text-label-caps uppercase text-on-surface-variant">
+          Filter tours
+        </h2>
+        <div className="mt-4 grid grid-cols-1 gap-4 md:grid-cols-2">
           <div>
-            <label className="block text-sm font-medium text-gray-400 mb-2">
-              Difficulty Level
+            <label
+              htmlFor="level-filter"
+              className="mb-2 block font-label-caps text-[10px] uppercase tracking-[0.16em] text-on-surface-variant/70"
+            >
+              Difficulty level
             </label>
             <select
+              id="level-filter"
               value={selectedLevel}
               onChange={(e) => setSelectedLevel(e.target.value)}
-              className="w-full bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="input-field !font-body-md !text-sm"
             >
-              <option value="all">All Levels</option>
+              <option value="all">All levels</option>
               {tourIndex?.levels?.map((level) => (
                 <option key={level.id} value={level.id}>
-                  {level.name} - {level.description}
+                  {level.name} — {level.description}
                 </option>
               ))}
             </select>
           </div>
 
-          {/* System Filter */}
           <div>
-            <label className="block text-sm font-medium text-gray-400 mb-2">
-              Body System
+            <label
+              htmlFor="system-filter"
+              className="mb-2 block font-label-caps text-[10px] uppercase tracking-[0.16em] text-on-surface-variant/70"
+            >
+              Body system
             </label>
             <select
+              id="system-filter"
               value={selectedSystem}
               onChange={(e) => setSelectedSystem(e.target.value)}
-              className="w-full bg-gray-800 border border-gray-700 rounded px-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+              className="input-field !font-body-md !text-sm"
             >
-              <option value="all">All Systems</option>
+              <option value="all">All systems</option>
               {tourIndex?.systems?.map((system) => (
                 <option key={system.id} value={system.id}>
                   {system.name}
@@ -167,93 +170,128 @@ function LearnMode() {
             </select>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Tour Grid */}
-      <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-        {filteredTours.map((tour) => (
-          <Link
-            key={tour.id}
-            to={`/learn/tour/${tour.id}`}
-            className="card hover:border-blue-500 transition-all duration-200 hover:shadow-lg hover:shadow-blue-500/20 group"
+      {/* Tour grid */}
+      {filteredTours.length > 0 ? (
+        <div className="grid grid-cols-1 gap-bento-gap sm:grid-cols-2 lg:grid-cols-3">
+          {filteredTours.map((tour) => {
+            const visual = visualFor(tour.systemId)
+            return (
+              <Link
+                key={tour.id}
+                to={`/learn/tour/${tour.id}`}
+                className="glass-panel rounded-card group flex flex-col overflow-hidden transition-transform duration-300 hover:-translate-y-1"
+              >
+                <div
+                  className={`flex h-28 items-center justify-center bg-gradient-to-br ${visual.wash} to-transparent`}
+                >
+                  <Icon
+                    name={visual.icon}
+                    size={52}
+                    className={`${visual.accent} opacity-70 transition-opacity group-hover:opacity-100`}
+                  />
+                </div>
+
+                <div className="flex flex-1 flex-col p-card-padding">
+                  <h3 className="font-headline-md text-base text-on-surface transition-colors group-hover:text-secondary">
+                    {tour.title}
+                  </h3>
+                  <p className="mt-2 flex-1 text-sm leading-relaxed text-on-surface-variant">
+                    {tour.description}
+                  </p>
+
+                  <div className="mt-4 flex items-center justify-between gap-3">
+                    <span
+                      className={`rounded border px-2 py-1 font-label-caps text-label-caps uppercase ${levelTone(tour.level)}`}
+                    >
+                      {tour.level}
+                    </span>
+                    <span className="flex items-center gap-1 font-code-mono text-xs text-on-surface-variant">
+                      <Icon name="schedule" size={14} />
+                      {tour.estimatedMinutes} min
+                    </span>
+                  </div>
+                </div>
+              </Link>
+            )
+          })}
+        </div>
+      ) : (
+        <div className="glass-panel rounded-card flex flex-col items-center px-6 py-16 text-center">
+          <Icon name="search_off" size={48} className="text-on-surface-variant/30" />
+          <h2 className="mt-4 font-headline-md text-lg text-on-surface">No tours found</h2>
+          <p className="mt-2 text-sm text-on-surface-variant">Try adjusting your filters.</p>
+          <button
+            type="button"
+            onClick={() => {
+              setSelectedLevel('all')
+              setSelectedSystem('all')
+            }}
+            className="btn-ghost mt-6"
           >
-            {/* Tour Header with Gradient */}
-            <div
-              className={`h-32 rounded-t-lg bg-gradient-to-br ${getSystemColor(tour.systemId)} mb-4 flex items-center justify-center`}
-            >
-              <div className="text-white text-6xl opacity-80">
-                {tour.systemId === 'cardiovascular' && '❤️'}
-                {tour.systemId === 'nervous' && '🧠'}
-                {tour.systemId === 'digestive' && '🔬'}
-              </div>
-            </div>
-
-            {/* Tour Content */}
-            <div>
-              <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-400 transition">
-                {tour.title}
-              </h3>
-              <p className="text-gray-400 text-sm mb-4">{tour.description}</p>
-
-              {/* Meta Information */}
-              <div className="flex items-center justify-between text-sm">
-                <span className={`px-2 py-1 rounded border ${getLevelColor(tour.level)}`}>
-                  {tour.level.charAt(0).toUpperCase() + tour.level.slice(1)}
-                </span>
-                <span className="text-gray-500">
-                  ⏱️ {tour.estimatedMinutes} min
-                </span>
-              </div>
-            </div>
-          </Link>
-        ))}
-      </div>
-
-      {/* Empty State */}
-      {filteredTours.length === 0 && (
-        <div className="card text-center py-12">
-          <div className="text-6xl mb-4">🔍</div>
-          <h3 className="text-xl font-bold text-white mb-2">No tours found</h3>
-          <p className="text-gray-400">Try adjusting your filters</p>
+            <Icon name="filter_alt_off" size={16} />
+            Clear filters
+          </button>
         </div>
       )}
 
-      {/* System Overview Cards */}
-      <div className="mt-12">
-        <h2 className="text-2xl font-bold text-white mb-6">Body Systems</h2>
-        <div className="grid md:grid-cols-3 gap-6">
-          {tourIndex?.systems?.map((system) => (
-            <div key={system.id} className="card">
-              <h3 className="text-lg font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500 mb-2">
-                {system.name}
-              </h3>
-              <p className="text-gray-400 text-sm mb-4">{system.description}</p>
-              <div className="text-sm text-gray-500">
-                Available levels: {system.availableLevels.join(', ')}
-              </div>
-            </div>
-          ))}
-        </div>
-      </div>
+      {/* System overview */}
+      {tourIndex?.systems?.length > 0 && (
+        <section>
+          <h2 className="font-headline-md text-xl text-on-surface md:text-headline-md">
+            Body systems
+          </h2>
+          <div className="mt-5 grid grid-cols-1 gap-bento-gap sm:grid-cols-2 lg:grid-cols-3">
+            {tourIndex.systems.map((system) => {
+              const visual = visualFor(system.id)
+              return (
+                <article key={system.id} className="glass-panel rounded-card p-card-padding">
+                  <span className={`inline-flex rounded-lg bg-white/5 p-3 ${visual.accent}`}>
+                    <Icon name={visual.icon} size={22} />
+                  </span>
+                  <h3 className="mt-4 font-headline-md text-base text-on-surface">
+                    {system.name}
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">
+                    {system.description}
+                  </p>
+                  <p className="mt-4 font-code-mono text-[11px] text-on-surface-variant/70">
+                    Levels: {system.availableLevels.join(', ')}
+                  </p>
+                </article>
+              )
+            })}
+          </div>
+        </section>
+      )}
 
-      {/* Educational Info */}
-      <div className="card bg-blue-900 bg-opacity-10 border-blue-600 mt-8">
-        <h3 className="text-xl font-bold text-blue-400 mb-4">About Learn Mode</h3>
-        <div className="space-y-3 text-gray-300 text-sm">
-          <p>
-            Learn Mode provides guided tours through human anatomy and physiology. Each tour includes:
-          </p>
-          <ul className="list-disc list-inside space-y-1 ml-4">
-            <li>Step-by-step explanations with visual highlights</li>
-            <li>Interactive 3D anatomical models</li>
-            <li>Evidence-based educational content</li>
-            <li>Progressive learning paths from basic to advanced</li>
-          </ul>
-          <p className="text-yellow-400 font-medium">
-            This is educational content only. Not for medical diagnosis, treatment, or advice.
-          </p>
-        </div>
-      </div>
+      {/* About */}
+      <section className="glass-panel rounded-card p-card-padding">
+        <h2 className="flex items-center gap-2 font-label-caps text-label-caps uppercase text-cytosine-azure">
+          <Icon name="school" size={18} />
+          About learn mode
+        </h2>
+        <p className="mt-4 text-sm leading-relaxed text-on-surface-variant">
+          Learn Mode provides guided tours through human anatomy and physiology. Each tour includes:
+        </p>
+        <ul className="mt-3 space-y-2">
+          {[
+            'Step-by-step explanations with visual highlights',
+            'Interactive 3D anatomical models',
+            'Evidence-based educational content',
+            'Progressive learning paths from basic to advanced',
+          ].map((item) => (
+            <li key={item} className="flex items-start gap-2.5 text-sm text-on-surface-variant">
+              <Icon name="check_circle" size={16} className="mt-0.5 shrink-0 text-secondary" />
+              {item}
+            </li>
+          ))}
+        </ul>
+        <p className="mt-4 border-t border-glass-border pt-4 font-code-mono text-[11px] leading-relaxed text-guanine-amber">
+          Educational content only. Not for medical diagnosis, treatment, or advice.
+        </p>
+      </section>
     </div>
   )
 }

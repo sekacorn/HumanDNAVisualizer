@@ -1,6 +1,8 @@
 import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import UploadCard from '../components/UploadCard'
+import Icon from '../components/ui/Icon'
+import PageHeader from '../components/ui/PageHeader'
 import { importVCF, importGenotype } from '../services/api'
 import authService from '../services/authService'
 
@@ -10,6 +12,44 @@ import authService from '../services/authService'
  * Upload and process genomic data files (VCF, TSV/CSV).
  * Educational/research purposes only.
  */
+
+const ACCEPTED = [
+  ['VCF files', 'Standard variant call format (.vcf, .vcf.gz)'],
+  ['TSV/CSV files', 'Tab or comma-separated genotype data'],
+  ['File size', 'Up to 100 MB per file'],
+  ['Reference', 'GRCh37/hg19 or GRCh38/hg38'],
+]
+
+const PIPELINE = [
+  ['Validate', 'Check file format and structure'],
+  ['Parse', 'Extract genomic variant data'],
+  ['Store', 'Save in the canonical database schema'],
+  ['Model', 'Generate anatomy associations'],
+]
+
+function ImportSuccess({ result }) {
+  return (
+    <div className="mt-4 animate-fade-up rounded-card border border-secondary/40 bg-secondary/[0.08] p-4">
+      <div className="flex items-start gap-3">
+        <Icon name="check_circle" size={22} className="shrink-0 text-secondary" fill />
+        <div className="min-w-0">
+          <h4 className="font-label-caps text-label-caps uppercase text-secondary">
+            Import successful
+          </h4>
+          <p className="mt-2 text-sm text-on-surface-variant">{result.message}</p>
+          <p className="mt-2 font-code-mono text-xs text-on-surface-variant/80">
+            Sample ID: <span className="text-secondary">{result.sampleId}</span> · Variants:{' '}
+            <span className="text-secondary">{result.variantCount}</span>
+          </p>
+          <p className="mt-2 flex items-center gap-2 font-code-mono text-xs text-on-surface-variant/60">
+            <Icon name="progress_activity" size={14} className="animate-spin" />
+            Redirecting to samples…
+          </p>
+        </div>
+      </div>
+    </div>
+  )
+}
 
 function Import() {
   const navigate = useNavigate()
@@ -53,7 +93,6 @@ function Import() {
         message: response.data.message || 'VCF file imported successfully'
       })
 
-      // Navigate to samples page after 2 seconds
       setTimeout(() => {
         navigate('/samples')
       }, 2000)
@@ -82,7 +121,6 @@ function Import() {
       setGenotypeError(null)
       setGenotypeSuccess(null)
 
-      // Simulate progress
       const progressInterval = setInterval(() => {
         setGenotypeProgress(prev => Math.min(prev + 10, 90))
       }, 200)
@@ -98,7 +136,6 @@ function Import() {
         message: response.data.message || 'Genotype file imported successfully'
       })
 
-      // Navigate to samples page after 2 seconds
       setTimeout(() => {
         navigate('/samples')
       }, 2000)
@@ -116,45 +153,59 @@ function Import() {
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      {/* Header */}
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
-          Import Genomic Data
-        </h1>
-        <p className="text-gray-400">
-          Upload your genomic data files for visualization and association modeling
-        </p>
-      </div>
+    <div className="space-y-bento-gap">
+      <PageHeader
+        eyebrow="Ingest pipeline"
+        title="Import genomic data"
+        subtitle="Upload your genomic data files for visualization and association modeling."
+      />
 
-      {/* Info cards */}
-      <div className="grid md:grid-cols-2 gap-6 mb-8">
-        <div className="card">
-          <h3 className="text-lg font-bold text-blue-400 mb-2">What We Accept</h3>
-          <ul className="space-y-2 text-sm text-gray-300">
-            <li>• <strong>VCF Files:</strong> Standard variant call format (.vcf, .vcf.gz)</li>
-            <li>• <strong>TSV/CSV Files:</strong> Tab or comma-separated genotype data</li>
-            <li>• <strong>File Size:</strong> Up to 100MB per file</li>
-            <li>• <strong>Reference:</strong> GRCh37/hg19 or GRCh38/hg38</li>
-          </ul>
-        </div>
+      {/* Spec cards */}
+      <div className="grid grid-cols-1 gap-bento-gap md:grid-cols-2">
+        <section className="glass-panel rounded-card p-card-padding">
+          <h2 className="flex items-center gap-2 font-label-caps text-label-caps uppercase text-cytosine-azure">
+            <Icon name="checklist" size={18} />
+            What we accept
+          </h2>
+          <dl className="mt-4 space-y-3">
+            {ACCEPTED.map(([term, detail]) => (
+              <div key={term} className="flex flex-col gap-0.5 border-b border-glass-border pb-3 last:border-0 last:pb-0">
+                <dt className="text-sm text-on-surface">{term}</dt>
+                <dd className="font-code-mono text-[11px] leading-relaxed text-on-surface-variant">
+                  {detail}
+                </dd>
+              </div>
+            ))}
+          </dl>
+        </section>
 
-        <div className="card">
-          <h3 className="text-lg font-bold text-purple-400 mb-2">Processing Steps</h3>
-          <ol className="space-y-2 text-sm text-gray-300">
-            <li>1. <strong>Validate:</strong> Check file format and structure</li>
-            <li>2. <strong>Parse:</strong> Extract genomic variant data</li>
-            <li>3. <strong>Store:</strong> Save in canonical database schema</li>
-            <li>4. <strong>Model:</strong> Generate anatomy associations</li>
+        <section className="glass-panel rounded-card p-card-padding">
+          <h2 className="flex items-center gap-2 font-label-caps text-label-caps uppercase text-secondary">
+            <Icon name="conveyor_belt" size={18} />
+            Processing steps
+          </h2>
+          <ol className="mt-4 space-y-3">
+            {PIPELINE.map(([step, detail], i) => (
+              <li key={step} className="flex items-start gap-3">
+                <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full border border-secondary/30 bg-secondary/10 font-code-mono text-[11px] text-secondary">
+                  {i + 1}
+                </span>
+                <span className="min-w-0">
+                  <span className="block text-sm text-on-surface">{step}</span>
+                  <span className="mt-0.5 block font-code-mono text-[11px] leading-relaxed text-on-surface-variant">
+                    {detail}
+                  </span>
+                </span>
+              </li>
+            ))}
           </ol>
-        </div>
+        </section>
       </div>
 
-      {/* Upload sections */}
-      <div className="space-y-8">
-        {/* VCF Upload */}
+      {/* Upload lanes */}
+      <div className="grid grid-cols-1 gap-bento-gap lg:grid-cols-2">
         <div>
-          <h2 className="text-2xl font-bold text-white mb-4">VCF Format</h2>
+          <h2 className="mb-3 font-headline-md text-lg text-on-surface">VCF format</h2>
           <UploadCard
             accept=".vcf,.vcf.gz"
             maxSizeMB={100}
@@ -163,41 +214,14 @@ function Import() {
             progress={vcfProgress}
             error={vcfError}
             title="Upload VCF File"
-            description="Variant Call Format (VCF) - industry standard for genomic variants"
+            description="Variant Call Format (VCF) — industry standard for genomic variants"
             disabled={vcfUploading || !!vcfSuccess}
           />
-
-          {/* Success message */}
-          {vcfSuccess && (
-            <div className="mt-4 p-4 bg-green-900 bg-opacity-30 border border-green-500 rounded-lg">
-              <div className="flex items-start gap-3">
-                <svg
-                  className="w-6 h-6 text-green-500 flex-shrink-0"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <div>
-                  <h4 className="text-green-400 font-bold mb-1">Import Successful!</h4>
-                  <p className="text-sm text-gray-300">{vcfSuccess.message}</p>
-                  <p className="text-sm text-gray-400 mt-1">
-                    Sample ID: {vcfSuccess.sampleId} | Variants: {vcfSuccess.variantCount}
-                  </p>
-                  <p className="text-sm text-gray-400 mt-2">Redirecting to samples page...</p>
-                </div>
-              </div>
-            </div>
-          )}
+          {vcfSuccess && <ImportSuccess result={vcfSuccess} />}
         </div>
 
-        {/* Genotype TSV/CSV Upload */}
         <div>
-          <h2 className="text-2xl font-bold text-white mb-4">TSV/CSV Format</h2>
+          <h2 className="mb-3 font-headline-md text-lg text-on-surface">TSV/CSV format</h2>
           <UploadCard
             accept=".tsv,.csv"
             maxSizeMB={100}
@@ -209,87 +233,75 @@ function Import() {
             description="Tab or comma-separated genotype data with flexible column mapping"
             disabled={genotypeUploading || !!genotypeSuccess}
           />
+          {genotypeSuccess && <ImportSuccess result={genotypeSuccess} />}
+        </div>
+      </div>
 
-          {/* Success message */}
-          {genotypeSuccess && (
-            <div className="mt-4 p-4 bg-green-900 bg-opacity-30 border border-green-500 rounded-lg">
-              <div className="flex items-start gap-3">
-                <svg
-                  className="w-6 h-6 text-green-500 flex-shrink-0"
-                  fill="currentColor"
-                  viewBox="0 0 20 20"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <div>
-                  <h4 className="text-green-400 font-bold mb-1">Import Successful!</h4>
-                  <p className="text-sm text-gray-300">{genotypeSuccess.message}</p>
-                  <p className="text-sm text-gray-400 mt-1">
-                    Sample ID: {genotypeSuccess.sampleId} | Variants: {genotypeSuccess.variantCount}
-                  </p>
-                  <p className="text-sm text-gray-400 mt-2">Redirecting to samples page...</p>
-                </div>
-              </div>
+      {/* Format reference */}
+      <section className="glass-panel rounded-card p-card-padding">
+        <h2 className="flex items-center gap-2 font-label-caps text-label-caps uppercase text-cytosine-azure">
+          <Icon name="terminal" size={18} />
+          File format requirements
+        </h2>
+
+        <div className="mt-5 space-y-6">
+          <div>
+            <h3 className="font-headline-md text-base text-on-surface">VCF format</h3>
+            <p className="mt-1 text-sm text-on-surface-variant">
+              Standard VCF 4.x with these columns:
+            </p>
+            {/* Wide fixed-width content scrolls inside its own container */}
+            <div className="mt-2 overflow-x-auto rounded border border-glass-border bg-surface-container-lowest/70">
+              <code className="block whitespace-pre px-3 py-2 font-code-mono text-xs text-secondary">
+                #CHROM  POS  ID  REF  ALT  QUAL  FILTER  INFO  FORMAT  SAMPLE
+              </code>
             </div>
-          )}
-        </div>
-      </div>
-
-      {/* Format help */}
-      <div className="mt-8 card bg-blue-900 bg-opacity-10 border-blue-700">
-        <h3 className="text-xl font-bold text-blue-400 mb-4">File Format Requirements</h3>
-
-        <div className="space-y-4 text-sm text-gray-300">
-          <div>
-            <h4 className="font-semibold text-white mb-2">VCF Format:</h4>
-            <p className="mb-2">Standard VCF 4.x format with these columns:</p>
-            <code className="block bg-gray-800 p-2 rounded text-xs text-green-400">
-              #CHROM  POS     ID      REF     ALT     QUAL    FILTER  INFO    FORMAT  SAMPLE
-            </code>
           </div>
 
           <div>
-            <h4 className="font-semibold text-white mb-2">TSV/CSV Format:</h4>
-            <p className="mb-2">Flexible column names, must include:</p>
-            <ul className="list-disc list-inside space-y-1 ml-2">
-              <li>Chromosome (column: chromosome, chr, chrom, or #chr)</li>
-              <li>Position (column: position, pos, or start)</li>
-              <li>Genotype (column: genotype, gt) OR Allele1/Allele2</li>
+            <h3 className="font-headline-md text-base text-on-surface">TSV/CSV format</h3>
+            <p className="mt-1 text-sm text-on-surface-variant">
+              Flexible column names; must include:
+            </p>
+            <ul className="mt-2 space-y-1.5">
+              {[
+                'Chromosome — chromosome, chr, chrom or #chr',
+                'Position — position, pos or start',
+                'Genotype — genotype, gt, or Allele1/Allele2',
+              ].map((item) => (
+                <li
+                  key={item}
+                  className="flex items-start gap-2 font-code-mono text-[11px] leading-relaxed text-on-surface-variant"
+                >
+                  <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-cytosine-azure" />
+                  {item}
+                </li>
+              ))}
             </ul>
-            <p className="mt-2">Optional columns: rsid, ref, alt, quality, filter</p>
+            <p className="mt-2 font-code-mono text-[11px] text-on-surface-variant/70">
+              Optional: rsid, ref, alt, quality, filter
+            </p>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Educational disclaimer */}
-      <div className="mt-8 card bg-yellow-900 bg-opacity-10 border-yellow-600">
+      {/* Disclaimer */}
+      <section className="glass-panel rounded-card border-l-2 !border-l-guanine-amber p-card-padding">
         <div className="flex items-start gap-3">
-          <svg
-            className="w-6 h-6 text-yellow-500 flex-shrink-0 mt-0.5"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path
-              fillRule="evenodd"
-              d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-              clipRule="evenodd"
-            />
-          </svg>
+          <Icon name="warning" size={20} className="mt-0.5 shrink-0 text-guanine-amber" />
           <div>
-            <h4 className="text-yellow-500 font-bold mb-1">Educational/Research Use Only</h4>
-            <p className="text-sm text-gray-300">
+            <h2 className="font-label-caps text-label-caps uppercase text-guanine-amber">
+              Educational / research use only
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">
               This platform is designed for educational visualization and association modeling.
-              Results represent preliminary associations with evidence quality labels, not
-              medical predictions or treatment recommendations. Always consult qualified healthcare
+              Results represent preliminary associations with evidence quality labels — not medical
+              predictions or treatment recommendations. Always consult qualified healthcare
               professionals for medical decisions.
             </p>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   )
 }

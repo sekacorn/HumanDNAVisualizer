@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { MOCK_ENABLED, mockAuth } from '../mocks/mockApi';
 
 const API_BASE_URL = 'http://localhost:8081/api/auth';
 
@@ -10,6 +11,10 @@ class AuthService {
 
   // Register new user
   async register(username, email, password) {
+    if (MOCK_ENABLED) {
+      return mockAuth.register(username, email, password);
+    }
+
     try {
       const response = await axios.post(`${API_BASE_URL}/register`, {
         username,
@@ -28,6 +33,18 @@ class AuthService {
 
   // Login user
   async login(username, password, totpCode = null) {
+    if (MOCK_ENABLED) {
+      const result = await mockAuth.login(username, password, totpCode);
+      if (result.success) {
+        this.token = result.data.token;
+        this.user = result.data.user;
+        localStorage.setItem('jwt_token', this.token);
+        localStorage.setItem('user', JSON.stringify(this.user));
+        axios.defaults.headers.common['Authorization'] = `Bearer ${this.token}`;
+      }
+      return result;
+    }
+
     try {
       const loginData = { username, password };
       if (totpCode) {
@@ -159,6 +176,7 @@ class AuthService {
   // Verify token validity
   async verifyToken() {
     if (!this.token) return false;
+    if (MOCK_ENABLED) return true;
 
     try {
       const response = await axios.get(`${API_BASE_URL}/verify`, {

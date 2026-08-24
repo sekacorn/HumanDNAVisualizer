@@ -2,26 +2,299 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
-  line-height: 1.5;
-  font-weight: 400;
+/* ==========================================================================
+   Genomic Command Center — base layer
+   Aesthetic: Glassmorphic Command. Depth via backdrop saturation + rim light,
+   never drop shadows alone. Chroma reserved for data signification.
+   ========================================================================== */
 
-  color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #0a0a0a;
+@layer base {
+  :root {
+    color-scheme: dark;
 
-  font-synthesis: none;
-  text-rendering: optimizeLegibility;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+    --adenine-emerald: #4edea3;
+    --thymine-crimson: #ffb4ab;
+    --guanine-amber: #ffb400;
+    --cytosine-azure: #adc6ff;
+    --glass-border: rgba(255, 255, 255, 0.1);
+
+    /* Safe-area aware height of the mobile bottom nav */
+    --bottom-nav-height: calc(5.5rem + env(safe-area-inset-bottom, 0px));
+  }
+
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+
+  body {
+    @apply bg-surface text-on-surface font-body-md text-body-md antialiased;
+    margin: 0;
+    min-height: 100vh;
+    min-height: 100dvh;
+    font-synthesis: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Deep-space canvas: azure bloom at the horizon falling to obsidian */
+    background-image: radial-gradient(circle at 50% 0%, rgba(3, 20, 39, 0.85) 0%, rgba(19, 19, 21, 1) 60%);
+    background-attachment: fixed;
+    overflow-x: hidden;
+  }
+
+  #root {
+    min-height: 100vh;
+    min-height: 100dvh;
+  }
+
+  ::selection {
+    background-color: var(--adenine-emerald);
+    color: #003824;
+  }
+
+  /* Terminal-grade scrollbars */
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: rgba(0, 0, 0, 0.2);
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #343536;
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #8e9197;
+  }
+
+  /* Focus rings read as a scan line, not a browser default */
+  :focus-visible {
+    outline: 2px solid var(--cytosine-azure);
+    outline-offset: 2px;
+  }
+
+  .material-symbols-outlined {
+    font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+    user-select: none;
+  }
+  .material-symbols-outlined[data-fill='1'] {
+    font-variation-settings: 'FILL' 1;
+  }
 }
 
-body {
-  margin: 0;
-  min-height: 100vh;
+@layer components {
+  /* --- Level 1: bento cells ------------------------------------------- */
+  .glass-panel {
+    background-color: rgba(3, 20, 39, 0.7);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-top: 1px solid var(--glass-border);
+    border-left: 1px solid var(--glass-border);
+    border-right: 1px solid rgba(0, 0, 0, 0.3);
+    border-bottom: 1px solid rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  }
+
+  /* --- Level 2: popovers, sheets, drawers ------------------------------ */
+  .glass-panel-elevated {
+    background-color: rgba(42, 58, 79, 0.85);
+    backdrop-filter: blur(24px);
+    -webkit-backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    box-shadow: 0 16px 48px 0 rgba(0, 0, 0, 0.5);
+  }
+
+  .card {
+    @apply glass-panel rounded-card p-card-padding;
+  }
+
+  /* --- Blueprint grid backdrop ----------------------------------------- */
+  .bg-grid-pattern {
+    background-size: 24px 24px;
+    background-image:
+      linear-gradient(to right, rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+  }
+
+  /* --- Kinetic buttons -------------------------------------------------- */
+  .btn-primary {
+    @apply relative inline-flex items-center justify-center gap-2 overflow-hidden rounded-full
+           px-6 py-3 font-label-caps text-label-caps uppercase text-on-secondary
+           transition-all duration-300 active:scale-95;
+    background: linear-gradient(135deg, #adc6ff, #4edea3);
+  }
+  .btn-primary:hover {
+    box-shadow: 0 0 20px rgba(78, 222, 163, 0.4);
+    transform: translateY(-1px);
+  }
+  .btn-primary:disabled {
+    @apply cursor-not-allowed opacity-50;
+    transform: none;
+    box-shadow: none;
+  }
+
+  .btn-secondary {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-glass-border
+           bg-surface-container-high px-6 py-3 font-label-caps text-label-caps uppercase
+           text-on-surface transition-colors duration-300 hover:bg-surface-bright active:scale-95;
+  }
+
+  .btn-ghost {
+    @apply inline-flex items-center justify-center gap-2 rounded-full border border-glass-border
+           bg-white/[0.03] px-4 py-2 font-label-caps text-label-caps uppercase
+           text-on-surface-variant transition-colors hover:bg-white/[0.08] hover:text-on-surface;
+  }
+
+  /* Scan sweep — a light source crossing the component once on hover */
+  .btn-scan {
+    position: relative;
+    overflow: hidden;
+  }
+  .btn-scan::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 50%;
+    height: 100%;
+    background: linear-gradient(to right, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transform: skewX(-20deg);
+    pointer-events: none;
+  }
+  .btn-scan:hover::after {
+    animation: scan 0.6s ease-out;
+  }
+
+  /* --- Data chips: A / T / G / C ---------------------------------------- */
+  .base-A { color: var(--adenine-emerald); text-shadow: 0 0 8px rgba(78, 222, 163, 0.5); }
+  .base-T { color: var(--thymine-crimson); text-shadow: 0 0 8px rgba(255, 180, 171, 0.5); }
+  .base-G { color: var(--guanine-amber);   text-shadow: 0 0 8px rgba(255, 180, 0, 0.5); }
+  .base-C { color: var(--cytosine-azure);  text-shadow: 0 0 8px rgba(173, 198, 255, 0.5); }
+
+  .chip-A { background-color: rgba(78, 222, 163, 0.15);  color: var(--adenine-emerald); border: 1px solid rgba(78, 222, 163, 0.5); }
+  .chip-T { background-color: rgba(255, 180, 171, 0.15); color: var(--thymine-crimson); border: 1px solid rgba(255, 180, 171, 0.5); }
+  .chip-G { background-color: rgba(255, 180, 0, 0.15);   color: var(--guanine-amber);   border: 1px solid rgba(255, 180, 0, 0.5); }
+  .chip-C { background-color: rgba(173, 198, 255, 0.15); color: var(--cytosine-azure);  border: 1px solid rgba(173, 198, 255, 0.5); }
+
+  /* --- Bioluminescent borders ------------------------------------------- */
+  .glow-adenine  { box-shadow: 0 0 8px rgba(78, 222, 163, 0.4);  border-color: var(--adenine-emerald); }
+  .glow-thymine  { box-shadow: 0 0 8px rgba(255, 180, 171, 0.4); border-color: var(--thymine-crimson); }
+  .glow-guanine  { box-shadow: 0 0 8px rgba(255, 180, 0, 0.4);   border-color: var(--guanine-amber); }
+  .glow-cytosine { box-shadow: 0 0 8px rgba(173, 198, 255, 0.4); border-color: var(--cytosine-azure); }
+
+  /* --- Sequence input: scanning focus ----------------------------------- */
+  .input-field {
+    @apply w-full rounded border border-glass-border bg-surface-container-highest/50 px-4 py-3
+           font-code-mono text-code-mono text-on-surface placeholder-on-surface-variant/50
+           transition-all focus:border-cytosine-azure focus:bg-surface-bright/40 focus:outline-none;
+  }
+
+  /* --- Progress ---------------------------------------------------------- */
+  .progress-track {
+    @apply h-2 w-full overflow-hidden rounded-full bg-surface-container-highest;
+  }
+  .progress-fill {
+    @apply relative h-full overflow-hidden rounded-full;
+    background: linear-gradient(90deg, #adc6ff, #4edea3);
+    transition: width 1s ease-in-out;
+  }
+  .progress-fill::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+    animation: shimmer 2s infinite;
+  }
+
+  /* --- Markdown copy (tour steps) ----------------------------------------
+     The Tailwind typography plugin is not a dependency, so style the rendered
+     markdown directly rather than relying on `prose`. */
+  .tour-prose {
+    @apply text-sm leading-relaxed text-on-surface-variant;
+  }
+  .tour-prose > * + * {
+    @apply mt-4;
+  }
+  .tour-prose h1,
+  .tour-prose h2,
+  .tour-prose h3,
+  .tour-prose h4 {
+    @apply font-headline-md text-on-surface;
+  }
+  .tour-prose h1 { @apply text-xl; }
+  .tour-prose h2 { @apply text-lg; }
+  .tour-prose h3,
+  .tour-prose h4 { @apply text-base; }
+  .tour-prose strong {
+    @apply font-semibold text-on-surface;
+  }
+  .tour-prose em {
+    @apply text-secondary not-italic;
+  }
+  .tour-prose a {
+    @apply text-secondary underline underline-offset-2 transition-colors hover:text-secondary-fixed;
+  }
+  .tour-prose ul,
+  .tour-prose ol {
+    @apply space-y-1.5 pl-5;
+  }
+  .tour-prose ul { @apply list-disc marker:text-secondary/60; }
+  .tour-prose ol { @apply list-decimal marker:text-secondary/60; }
+  .tour-prose code {
+    @apply rounded bg-white/[0.06] px-1.5 py-0.5 font-code-mono text-[0.85em] text-cytosine-azure;
+  }
+  .tour-prose pre {
+    @apply overflow-x-auto rounded-lg border border-glass-border bg-surface-container-lowest/70 p-3;
+  }
+  .tour-prose pre code {
+    @apply bg-transparent p-0;
+  }
+  .tour-prose blockquote {
+    @apply border-l-2 border-secondary/50 pl-4 italic;
+  }
+  .tour-prose table {
+    @apply w-full border-collapse text-left;
+  }
+  .tour-prose th,
+  .tour-prose td {
+    @apply border-b border-glass-border px-2 py-2;
+  }
+
+  /* --- Mobile layout affordances ----------------------------------------- */
+  .pb-safe-nav {
+    padding-bottom: calc(var(--bottom-nav-height) + 1rem);
+  }
+  .pb-safe {
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+  }
+
+  /* Tap targets stay >= 44px on touch surfaces */
+  .tap-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
 }
 
-#root {
-  min-height: 100vh;
+@layer utilities {
+  .text-gradient-dna {
+    @apply bg-gradient-to-r from-cytosine-azure to-secondary bg-clip-text text-transparent;
+  }
+
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }

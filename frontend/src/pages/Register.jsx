@@ -1,6 +1,29 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import authService from '../services/authService';
+import Icon from '../components/ui/Icon';
+
+const SECURITY_FEATURES = [
+  { icon: 'lock', label: 'AES-256' },
+  { icon: 'phonelink_lock', label: 'MFA ready' },
+  { icon: 'verified_user', label: 'HIPAA' },
+];
+
+/** Rough strength meter — guidance for the user, never a substitute for server validation. */
+function passwordStrength(password) {
+  if (!password) return { score: 0, label: 'Empty', tone: 'bg-outline-variant' };
+  let score = 0;
+  if (password.length >= 8) score += 1;
+  if (password.length >= 12) score += 1;
+  if (/[A-Z]/.test(password) && /[a-z]/.test(password)) score += 1;
+  if (/\d/.test(password)) score += 1;
+  if (/[^A-Za-z0-9]/.test(password)) score += 1;
+
+  if (score <= 2) return { score, label: 'Weak', tone: 'bg-thymine-crimson' };
+  if (score === 3) return { score, label: 'Fair', tone: 'bg-guanine-amber' };
+  if (score === 4) return { score, label: 'Strong', tone: 'bg-cytosine-azure' };
+  return { score, label: 'Excellent', tone: 'bg-adenine-emerald' };
+}
 
 export default function Register() {
   const navigate = useNavigate();
@@ -12,6 +35,7 @@ export default function Register() {
   });
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const handleChange = (e) => {
     setFormData({
@@ -64,7 +88,6 @@ export default function Register() {
       );
 
       if (result.success) {
-        // Registration successful, redirect to login
         navigate('/login', {
           state: {
             message: 'Registration successful! Please log in.'
@@ -80,212 +103,194 @@ export default function Register() {
     }
   };
 
+  const strength = passwordStrength(formData.password);
+  const mismatch =
+    formData.confirmPassword.length > 0 && formData.confirmPassword !== formData.password;
+
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900">
-      <div className="max-w-md w-full space-y-8 bg-white p-10 rounded-xl shadow-2xl">
+    <div className="glass-panel rounded-card p-6 sm:p-8">
+      <header>
+        <p className="font-label-caps text-label-caps uppercase text-secondary">New researcher</p>
+        <h1 className="mt-2 font-headline-lg text-2xl tracking-tight text-on-surface">
+          Create your account
+        </h1>
+        <p className="mt-2 text-sm text-on-surface-variant">
+          Start exploring your genomic data securely.
+        </p>
+      </header>
+
+      <form className="mt-8 space-y-4" onSubmit={handleSubmit}>
         <div>
-          <h2 className="mt-6 text-center text-3xl font-extrabold text-gray-900">
-            Create your account
-          </h2>
-          <p className="mt-2 text-center text-sm text-gray-600">
-            Start exploring your genomic data securely
-          </p>
+          <label
+            htmlFor="username"
+            className="mb-2 block font-label-caps text-label-caps uppercase text-on-surface-variant"
+          >
+            Username
+          </label>
+          <input
+            id="username"
+            name="username"
+            type="text"
+            autoComplete="username"
+            required
+            className="input-field"
+            placeholder="Choose a username"
+            value={formData.username}
+            onChange={handleChange}
+          />
         </div>
 
-        <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          <div className="rounded-md shadow-sm space-y-4">
-            <div>
-              <label htmlFor="username" className="block text-sm font-medium text-gray-700">
-                Username
-              </label>
-              <input
-                id="username"
-                name="username"
-                type="text"
-                required
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Choose a username"
-                value={formData.username}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-                Email address
-              </label>
-              <input
-                id="email"
-                name="email"
-                type="email"
-                required
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="you@example.com"
-                value={formData.email}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <label htmlFor="password" className="block text-sm font-medium text-gray-700">
-                Password
-              </label>
-              <input
-                id="password"
-                name="password"
-                type="password"
-                required
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Minimum 8 characters"
-                value={formData.password}
-                onChange={handleChange}
-              />
-            </div>
-            <div>
-              <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
-                Confirm Password
-              </label>
-              <input
-                id="confirmPassword"
-                name="confirmPassword"
-                type="password"
-                required
-                className="mt-1 appearance-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Re-enter your password"
-                value={formData.confirmPassword}
-                onChange={handleChange}
-              />
-            </div>
-          </div>
+        <div>
+          <label
+            htmlFor="email"
+            className="mb-2 block font-label-caps text-label-caps uppercase text-on-surface-variant"
+          >
+            Email address
+          </label>
+          <input
+            id="email"
+            name="email"
+            type="email"
+            autoComplete="email"
+            required
+            className="input-field"
+            placeholder="you@example.com"
+            value={formData.email}
+            onChange={handleChange}
+          />
+        </div>
 
-          {error && (
-            <div className="rounded-md bg-red-50 p-4">
-              <div className="flex">
-                <div className="ml-3">
-                  <h3 className="text-sm font-medium text-red-800">{error}</h3>
-                </div>
-              </div>
-            </div>
-          )}
-
-          <div className="rounded-md bg-blue-50 p-4">
-            <div className="flex">
-              <div className="ml-3">
-                <h3 className="text-sm text-blue-700">
-                  Your data will be encrypted with AES-256 encryption and stored securely.
-                  We comply with HIPAA and GDPR regulations.
-                </h3>
-              </div>
-            </div>
-          </div>
-
-          <div>
+        <div>
+          <label
+            htmlFor="password"
+            className="mb-2 block font-label-caps text-label-caps uppercase text-on-surface-variant"
+          >
+            Password
+          </label>
+          <div className="relative">
+            <input
+              id="password"
+              name="password"
+              type={showPassword ? 'text' : 'password'}
+              autoComplete="new-password"
+              required
+              className="input-field pr-12"
+              placeholder="Minimum 8 characters"
+              value={formData.password}
+              onChange={handleChange}
+            />
             <button
-              type="submit"
-              disabled={loading}
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:bg-indigo-300 disabled:cursor-not-allowed"
+              type="button"
+              onClick={() => setShowPassword((v) => !v)}
+              aria-label={showPassword ? 'Hide password' : 'Show password'}
+              className="absolute right-1 top-1/2 flex h-10 w-10 -translate-y-1/2 items-center justify-center rounded-full text-on-surface-variant transition-colors hover:text-on-surface"
             >
-              {loading ? (
-                <span className="flex items-center">
-                  <svg
-                    className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                  >
-                    <circle
-                      className="opacity-25"
-                      cx="12"
-                      cy="12"
-                      r="10"
-                      stroke="currentColor"
-                      strokeWidth="4"
-                    ></circle>
-                    <path
-                      className="opacity-75"
-                      fill="currentColor"
-                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                    ></path>
-                  </svg>
-                  Creating account...
-                </span>
-              ) : (
-                'Create account'
-              )}
+              <Icon name={showPassword ? 'visibility_off' : 'visibility'} size={20} />
             </button>
           </div>
 
-          <div className="flex items-center justify-between">
-            <div className="text-sm">
-              <Link
-                to="/login"
-                className="font-medium text-indigo-600 hover:text-indigo-500"
-              >
-                Already have an account? Sign in
-              </Link>
+          {formData.password && (
+            <div className="mt-2 flex items-center gap-3">
+              <div className="flex flex-1 gap-1">
+                {[0, 1, 2, 3, 4].map((i) => (
+                  <span
+                    key={i}
+                    className={`h-1 flex-1 rounded-full transition-colors ${
+                      i < strength.score ? strength.tone : 'bg-surface-container-highest'
+                    }`}
+                  />
+                ))}
+              </div>
+              <span className="font-code-mono text-[10px] uppercase text-on-surface-variant">
+                {strength.label}
+              </span>
             </div>
-          </div>
-        </form>
-
-        <div className="mt-6">
-          <div className="relative">
-            <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300"></div>
-            </div>
-            <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">Security Features</span>
-            </div>
-          </div>
-
-          <div className="mt-6 grid grid-cols-3 gap-2 text-center">
-            <div className="flex flex-col items-center">
-              <svg
-                className="h-8 w-8 text-green-500 mb-1"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"
-                />
-              </svg>
-              <span className="text-xs text-gray-600">AES-256</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <svg
-                className="h-8 w-8 text-green-500 mb-1"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"
-                />
-              </svg>
-              <span className="text-xs text-gray-600">MFA Ready</span>
-            </div>
-            <div className="flex flex-col items-center">
-              <svg
-                className="h-8 w-8 text-green-500 mb-1"
-                fill="none"
-                stroke="currentColor"
-                viewBox="0 0 24 24"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"
-                />
-              </svg>
-              <span className="text-xs text-gray-600">HIPAA</span>
-            </div>
-          </div>
+          )}
         </div>
+
+        <div>
+          <label
+            htmlFor="confirmPassword"
+            className="mb-2 block font-label-caps text-label-caps uppercase text-on-surface-variant"
+          >
+            Confirm password
+          </label>
+          <input
+            id="confirmPassword"
+            name="confirmPassword"
+            type="password"
+            autoComplete="new-password"
+            required
+            aria-invalid={mismatch}
+            className={`input-field ${mismatch ? '!border-error' : ''}`}
+            placeholder="Re-enter your password"
+            value={formData.confirmPassword}
+            onChange={handleChange}
+          />
+          {mismatch && (
+            <p className="mt-2 font-code-mono text-[11px] text-error">Passwords do not match</p>
+          )}
+        </div>
+
+        {error && (
+          <p
+            role="alert"
+            className="flex items-start gap-2 rounded-lg border border-error/40 bg-error/10 px-4 py-3 text-sm leading-relaxed text-error"
+          >
+            <Icon name="error" size={18} className="mt-0.5 shrink-0" />
+            {error}
+          </p>
+        )}
+
+        <p className="flex items-start gap-2 rounded-lg border border-glass-border bg-white/[0.03] px-4 py-3 font-code-mono text-[11px] leading-relaxed text-on-surface-variant">
+          <Icon name="shield_lock" size={16} className="mt-0.5 shrink-0 text-cytosine-azure" />
+          Your data is encrypted with AES-256 and stored securely. We comply with HIPAA and GDPR.
+        </p>
+
+        <button type="submit" disabled={loading} className="btn-primary btn-scan w-full">
+          {loading ? (
+            <>
+              <Icon name="progress_activity" size={18} className="animate-spin" />
+              Creating account
+            </>
+          ) : (
+            <>
+              <Icon name="person_add" size={18} />
+              Create account
+            </>
+          )}
+        </button>
+
+        <p className="text-center text-sm text-on-surface-variant">
+          Already have an account?{' '}
+          <Link to="/login" className="text-secondary transition-colors hover:text-secondary-fixed">
+            Sign in
+          </Link>
+        </p>
+      </form>
+
+      <div className="mt-8">
+        <div className="relative flex items-center">
+          <span className="h-px flex-1 bg-glass-border" />
+          <span className="px-3 font-label-caps text-[10px] uppercase tracking-[0.16em] text-on-surface-variant/60">
+            Security
+          </span>
+          <span className="h-px flex-1 bg-glass-border" />
+        </div>
+
+        <ul className="mt-4 grid grid-cols-3 gap-2">
+          {SECURITY_FEATURES.map((feature) => (
+            <li
+              key={feature.label}
+              className="flex flex-col items-center gap-1.5 rounded-lg border border-glass-border bg-white/[0.02] py-3"
+            >
+              <Icon name={feature.icon} size={22} className="text-secondary" />
+              <span className="font-code-mono text-[10px] text-on-surface-variant">
+                {feature.label}
+              </span>
+            </li>
+          ))}
+        </ul>
       </div>
     </div>
   );

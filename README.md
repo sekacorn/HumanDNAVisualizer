@@ -26,25 +26,40 @@ All visualizations, mappings, and AI-generated explanations are **informational*
 
 ## Screenshots
 
-### Application Overview
-![HumanDNAVisualizer Application](Screenshot-1.png)
-*HumanDNAVisualizer - Interactive 3D anatomy visualization with genomic variant overlays, data import dashboard, and educational learn mode*
+### Command Centre
 
-### Additional Views
-![HumanDNAVisualizer - View 1a](screenshot-1a.jpg)
-*Alternate view highlighting UI layout and navigation*
+![HumanDNAVisualizer dashboard](docs/screenshots/01-dashboard.jpg)
+*Session dashboard — pipeline progress, variant impact breakdown, recent samples, and a live read stream in a bento layout*
 
-![HumanDNAVisualizer - View 1b](screenshot-1b.jpg)
-*Detail view of the 3D visualization panel*
+### Gene Explorer
 
-![HumanDNAVisualizer - View 1c](screenshot-1c.jpg)
-*Data import and mapping workflow*
+![3D DNA visualization](docs/screenshots/02-gene-explorer-3d.jpg)
+*Interactive double helix rendered with Three.js. Base pairs use the A/T/G/C colour spectrum applied consistently across the platform; the control rail toggles auto-rotate, reference grid, and backbone*
 
-![HumanDNAVisualizer - View 1d](screenshot-1d.jpg)
-*Evidence-labeled overlay and explainability panel*
+### Variant Analysis
 
-![HumanDNAVisualizer - View 1e](screenshot-1e.jpg)
-*Learn mode guided exploration view*
+![Variant analysis and trait predictions](docs/screenshots/03-variant-analysis.jpg)
+*Connect genomic, health-record, and lifestyle sources, then run trait predictions. Every result carries an evidence grade*
+
+### Anatomy Map
+
+![3D anatomy visualization with evidence overlays](docs/screenshots/04-anatomy-map.jpg)
+*Genomic associations projected onto anatomical structures. Node colour encodes evidence level — emerald (high), amber (medium), azure (low)*
+
+### Data Import
+
+![Genomic data import pipeline](docs/screenshots/05-import-data.jpg)
+*Vendor-neutral ingest for VCF and TSV/CSV, with format requirements and the validate → parse → store → model pipeline made explicit*
+
+### Learn Mode
+
+![Guided educational tours](docs/screenshots/06-learn-mode.jpg)
+*Guided tours through body systems, filterable by difficulty level and system*
+
+### Sign In
+
+![Sign in](docs/screenshots/07-sign-in.jpg)
+*Authentication with MFA support and enterprise SSO options*
 
 ---
 
@@ -201,6 +216,20 @@ This will start:
 - Username: `demo` / Password: `demo123` (USER)
 - Username: `admin` / Password: `admin123` (ADMIN)
 - Username: `moderator` / Password: `mod123` (MODERATOR)
+
+### UI-Only Demo (No Backend Required)
+
+To browse the interface without Java, Maven, or a database — useful for design review and screenshots:
+
+```bash
+npm run dev:demo --prefix frontend
+```
+
+This runs the frontend at `http://localhost:3000` with `VITE_MOCK_API=true`, routing every API and
+auth call through local fixtures in `frontend/src/mocks/`. Sign in with the same demo credentials
+listed above; a banner in the UI marks the session as mock data and lists the accounts.
+
+Nothing leaves your machine, and the mock layer is inert in normal `npm run dev` / `npm run build`.
 
 ### Manual Setup
 

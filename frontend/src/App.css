@@ -1,20 +1,21 @@
-/* Custom application styles */
+/* App-shell specifics.
+   Core design-system primitives (.glass-panel, .card, .btn-*, chips, progress)
+   live in index.css so every page inherits them. Keep this file for layout
+   behaviour that only the shell needs. */
 
-.glass-panel {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px;
+/* Sidebar/viewport transitions */
+.shell-drawer {
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.btn-primary {
-  @apply bg-gradient-to-r from-blue-500 to-purple-600 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:shadow-lg hover:scale-105;
+/* 3D viewport canvases should never inherit the page grid */
+.viewport-canvas {
+  background: radial-gradient(circle at 50% 40%, rgba(3, 20, 39, 0.9) 0%, rgba(13, 14, 16, 1) 70%);
 }
 
-.btn-secondary {
-  @apply bg-gray-700 text-white px-6 py-3 rounded-lg font-semibold transition-all duration-300 hover:bg-gray-600;
-}
-
-.card {
-  @apply glass-panel p-6 shadow-xl;
+/* Raw sequence readouts: preserve base-pair column alignment */
+.sequence-readout {
+  font-variant-ligatures: none;
+  letter-spacing: 0.12em;
+  word-break: break-all;
 }

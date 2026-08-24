@@ -19,9 +19,9 @@ function OverlayLegend({ overlays = [], visible = true, onToggle, className = ''
   const totalCount = overlays.length
 
   return (
-    <div className={`card ${className}`}>
-      <div className="flex items-center justify-between mb-4">
-        <h3 className="text-lg font-bold text-white">
+    <div className={`glass-panel rounded-card p-card-padding ${className}`}>
+      <div className="mb-4 flex items-center justify-between gap-3">
+        <h3 className="font-label-caps text-label-caps uppercase text-on-surface">
           Overlays ({totalCount})
         </h3>
         {onToggle && (
@@ -30,10 +30,12 @@ function OverlayLegend({ overlays = [], visible = true, onToggle, className = ''
               type="checkbox"
               checked={visible}
               onChange={(e) => onToggle(e.target.checked)}
-              className="w-4 h-4 rounded border-gray-600 bg-gray-700 text-blue-600 focus:ring-blue-500"
+              className="h-4 w-4 rounded border-outline-variant bg-surface-container-high accent-[#4edea3]"
               aria-label="Toggle overlay visibility"
             />
-            <span className="text-sm text-gray-300">Show</span>
+            <span className="font-label-caps text-label-caps uppercase text-on-surface-variant">
+              Show
+            </span>
           </label>
         )}
       </div>
@@ -42,24 +44,24 @@ function OverlayLegend({ overlays = [], visible = true, onToggle, className = ''
         {/* High evidence */}
         <div className="flex items-center justify-between">
           <EvidenceBadge level="HIGH" size="sm" />
-          <span className="text-gray-400 text-sm">{counts.HIGH}</span>
+          <span className="font-code-mono text-sm text-on-surface">{counts.HIGH}</span>
         </div>
 
         {/* Medium evidence */}
         <div className="flex items-center justify-between">
           <EvidenceBadge level="MEDIUM" size="sm" />
-          <span className="text-gray-400 text-sm">{counts.MEDIUM}</span>
+          <span className="font-code-mono text-sm text-on-surface">{counts.MEDIUM}</span>
         </div>
 
         {/* Low evidence */}
         <div className="flex items-center justify-between">
           <EvidenceBadge level="LOW" size="sm" />
-          <span className="text-gray-400 text-sm">{counts.LOW}</span>
+          <span className="font-code-mono text-sm text-on-surface">{counts.LOW}</span>
         </div>
       </div>
 
-      <div className="mt-4 pt-4 border-t border-gray-700">
-        <p className="text-xs text-gray-500">
+      <div className="mt-4 border-t border-glass-border pt-4">
+        <p className="font-code-mono text-[11px] leading-relaxed text-on-surface-variant/70">
           Evidence levels represent association strength from current data models,
           not medical certainty or predictions.
         </p>

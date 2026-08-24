@@ -2,6 +2,9 @@ import { useState, useEffect, useCallback } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { listUserSamples, deleteSample } from '../services/api'
 import authService from '../services/authService'
+import Icon from '../components/ui/Icon'
+import PageHeader from '../components/ui/PageHeader'
+import StatusPill from '../components/ui/StatusPill'
 
 /**
  * Samples Page
@@ -61,7 +64,6 @@ function Samples() {
       setDeleting(true)
       await deleteSample(deleteConfirm.id)
 
-      // Remove from list
       setSamples(prev => prev.filter(s => s.id !== deleteConfirm.id))
       setDeleteConfirm(null)
 
@@ -93,13 +95,9 @@ function Samples() {
   // Loading state
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex items-center justify-center h-96">
-          <div className="text-center">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
-            <div className="text-xl text-gray-400">Loading samples...</div>
-          </div>
-        </div>
+      <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4">
+        <Icon name="progress_activity" size={44} className="animate-spin text-cytosine-azure" />
+        <p className="font-code-mono text-sm text-on-surface-variant">Loading samples…</p>
       </div>
     )
   }
@@ -107,180 +105,189 @@ function Samples() {
   // Error state
   if (error) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="card bg-red-900 bg-opacity-20 border-red-500">
-          <h2 className="text-2xl font-bold text-red-400 mb-2">Error Loading Samples</h2>
-          <p className="text-gray-300">{error}</p>
-          <button
-            onClick={loadSamples}
-            className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
-          >
-            Retry
-          </button>
+      <div className="glass-panel rounded-card border-l-2 !border-l-error p-card-padding">
+        <div className="flex items-start gap-3">
+          <Icon name="error" size={22} className="mt-0.5 shrink-0 text-error" />
+          <div>
+            <h2 className="font-label-caps text-label-caps uppercase text-error">
+              Error loading samples
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">{error}</p>
+            <button type="button" onClick={loadSamples} className="btn-ghost mt-4">
+              <Icon name="refresh" size={16} />
+              Retry
+            </button>
+          </div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      {/* Header */}
-      <div className="flex items-center justify-between mb-8">
-        <div>
-          <h1 className="text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
-            My Genomic Samples
-          </h1>
-          <p className="text-gray-400">
-            {samples.length} sample{samples.length !== 1 ? 's' : ''} imported
-          </p>
-        </div>
-        <button
-          onClick={() => navigate('/import')}
-          className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-md font-medium hover:from-blue-600 hover:to-purple-700 transition"
-        >
-          + Import New Sample
-        </button>
-      </div>
+    <div className="space-y-bento-gap">
+      <PageHeader
+        eyebrow="Sample library"
+        title="My genomic samples"
+        subtitle={`${samples.length} sample${samples.length !== 1 ? 's' : ''} imported`}
+        actions={
+          <button type="button" onClick={() => navigate('/import')} className="btn-primary btn-scan">
+            <Icon name="add" size={18} />
+            Import sample
+          </button>
+        }
+      />
 
       {/* Empty state */}
       {samples.length === 0 && (
-        <div className="card text-center py-12">
-          <svg
-            className="w-16 h-16 text-gray-600 mx-auto mb-4"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-            />
-          </svg>
-          <h3 className="text-xl font-bold text-gray-400 mb-2">No Samples Yet</h3>
-          <p className="text-gray-500 mb-6">Import your first genomic data file to get started</p>
+        <div className="glass-panel rounded-card flex flex-col items-center px-6 py-16 text-center">
+          <Icon name="science" size={56} className="text-secondary/25" />
+          <h2 className="mt-4 font-headline-md text-lg text-on-surface">No samples yet</h2>
+          <p className="mt-2 max-w-sm text-sm leading-relaxed text-on-surface-variant">
+            Import your first genomic data file to start building the library.
+          </p>
           <button
+            type="button"
             onClick={() => navigate('/import')}
-            className="px-6 py-3 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-md font-medium hover:from-blue-600 hover:to-purple-700 transition"
+            className="btn-primary btn-scan mt-6"
           >
-            Import Sample
+            <Icon name="upload_file" size={18} />
+            Import sample
           </button>
         </div>
       )}
 
       {/* Samples list */}
       {samples.length > 0 && (
-        <div className="space-y-4">
+        <ul className="space-y-4">
           {samples.map((sample) => (
-            <div
+            <li
               key={sample.id}
-              className="card hover:border-blue-500 transition-colors"
+              className="glass-panel rounded-card p-card-padding transition-colors hover:bg-white/[0.03]"
             >
-              <div className="flex items-start justify-between">
-                <div className="flex-1">
+              <div className="flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between">
+                <div className="min-w-0 flex-1">
                   {/* Sample header */}
-                  <div className="flex items-center gap-3 mb-3">
-                    <h3 className="text-xl font-bold text-white">
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h2 className="font-headline-md text-lg text-on-surface">
                       Sample #{sample.id}
-                    </h3>
-                    <span className="px-2 py-1 text-xs font-semibold rounded bg-blue-900 bg-opacity-30 border border-blue-500 text-blue-400">
+                    </h2>
+                    <StatusPill tone="processing">
                       {sample.importFormat?.toUpperCase() || 'UNKNOWN'}
-                    </span>
+                    </StatusPill>
                     {sample.importStatus && (
-                      <span className={`
-                        px-2 py-1 text-xs font-semibold rounded
-                        ${sample.importStatus === 'SUCCESS'
-                          ? 'bg-green-900 bg-opacity-30 border-green-500 text-green-400'
-                          : 'bg-yellow-900 bg-opacity-30 border-yellow-500 text-yellow-400'
-                        }
-                      `}>
+                      <StatusPill
+                        tone={sample.importStatus === 'SUCCESS' ? 'success' : 'warning'}
+                      >
                         {sample.importStatus}
-                      </span>
+                      </StatusPill>
                     )}
                   </div>
 
                   {/* Sample details */}
-                  <div className="grid md:grid-cols-4 gap-4 mb-4">
-                    <div>
-                      <div className="text-sm text-gray-400">Imported</div>
-                      <div className="text-white font-medium">
-                        {formatDate(sample.importedAt)}
+                  <dl className="mt-4 grid grid-cols-2 gap-4 lg:grid-cols-4">
+                    {[
+                      ['Imported', formatDate(sample.importedAt)],
+                      ['Variants', formatNumber(sample.variantCount)],
+                      ['Genome build', sample.genomeBuild || 'Not specified'],
+                      ['Parser version', sample.parserVersion || 'N/A'],
+                    ].map(([label, value]) => (
+                      <div key={label} className="min-w-0">
+                        <dt className="font-label-caps text-[10px] uppercase tracking-[0.16em] text-on-surface-variant/70">
+                          {label}
+                        </dt>
+                        <dd className="mt-1 truncate text-sm text-on-surface">{value}</dd>
                       </div>
-                    </div>
-                    <div>
-                      <div className="text-sm text-gray-400">Variants</div>
-                      <div className="text-white font-medium">
-                        {formatNumber(sample.variantCount)}
-                      </div>
-                    </div>
-                    <div>
-                      <div className="text-sm text-gray-400">Genome Build</div>
-                      <div className="text-white font-medium">
-                        {sample.genomeBuild || 'Not specified'}
-                      </div>
-                    </div>
-                    <div>
-                      <div className="text-sm text-gray-400">Parser Version</div>
-                      <div className="text-white font-medium">
-                        {sample.parserVersion || 'N/A'}
-                      </div>
-                    </div>
-                  </div>
+                    ))}
+                  </dl>
 
-                  {/* File hash */}
                   {sample.fileHash && (
-                    <div className="text-xs text-gray-500">
-                      Hash: {sample.fileHash.substring(0, 16)}...
-                    </div>
+                    <p className="mt-4 truncate font-code-mono text-[11px] text-on-surface-variant/60">
+                      Hash: {sample.fileHash.substring(0, 16)}…
+                    </p>
                   )}
                 </div>
 
                 {/* Actions */}
-                <div className="flex flex-col gap-2 ml-4">
+                <div className="flex shrink-0 gap-2 lg:flex-col">
                   <button
+                    type="button"
                     onClick={() => handleView3D(sample.id)}
-                    className="px-4 py-2 bg-gradient-to-r from-blue-500 to-purple-600 text-white rounded-md font-medium hover:from-blue-600 hover:to-purple-700 transition whitespace-nowrap"
+                    className="btn-primary btn-scan flex-1 whitespace-nowrap !px-4 !py-2.5 lg:flex-none"
                     title="View in 3D anatomy viewer"
                   >
+                    <Icon name="3d_rotation" size={18} />
                     View 3D
                   </button>
                   <button
+                    type="button"
                     onClick={() => handleDelete(sample)}
-                    className="px-4 py-2 bg-red-600 bg-opacity-20 border border-red-600 text-red-400 rounded-md font-medium hover:bg-opacity-30 transition"
+                    className="tap-target flex flex-1 items-center justify-center gap-2 rounded-full border border-error/40 bg-error/10 px-4 py-2.5 font-label-caps text-label-caps uppercase text-error transition-colors hover:bg-error/20 lg:flex-none"
                     title="Delete this sample"
                   >
+                    <Icon name="delete" size={18} />
                     Delete
                   </button>
                 </div>
               </div>
-            </div>
+            </li>
           ))}
-        </div>
+        </ul>
       )}
 
       {/* Delete confirmation modal */}
       {deleteConfirm && (
-        <div className="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center z-50 p-4">
-          <div className="card max-w-md w-full bg-gray-900 border-red-500">
-            <h3 className="text-xl font-bold text-red-400 mb-4">Confirm Delete</h3>
-            <p className="text-gray-300 mb-6">
-              Are you sure you want to delete Sample #{deleteConfirm.id}?
-              This will permanently remove the sample and all {formatNumber(deleteConfirm.variantCount)} variant calls.
-              This action cannot be undone.
-            </p>
-            <div className="flex gap-3">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+          <div
+            role="presentation"
+            onClick={() => !deleting && setDeleteConfirm(null)}
+            className="absolute inset-0 bg-black/70 backdrop-blur-sm"
+          />
+          <div
+            role="alertdialog"
+            aria-modal="true"
+            aria-labelledby="delete-title"
+            className="glass-panel-elevated relative w-full max-w-md animate-fade-up rounded-card p-card-padding"
+          >
+            <div className="flex items-start gap-3">
+              <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-error/15 text-error">
+                <Icon name="delete_forever" size={22} />
+              </span>
+              <div className="min-w-0">
+                <h2 id="delete-title" className="font-headline-md text-lg text-on-surface">
+                  Delete sample #{deleteConfirm.id}?
+                </h2>
+                <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">
+                  This permanently removes the sample and all{' '}
+                  {formatNumber(deleteConfirm.variantCount)} variant calls. This action cannot be
+                  undone.
+                </p>
+              </div>
+            </div>
+
+            <div className="mt-6 flex flex-col gap-2 sm:flex-row">
               <button
+                type="button"
                 onClick={confirmDelete}
                 disabled={deleting}
-                className="flex-1 px-4 py-2 bg-red-600 text-white rounded-md font-medium hover:bg-red-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="tap-target flex flex-1 items-center justify-center gap-2 rounded-full bg-error px-4 py-3 font-label-caps text-label-caps uppercase text-on-error transition-opacity hover:opacity-90 disabled:opacity-50"
               >
-                {deleting ? 'Deleting...' : 'Delete Sample'}
+                {deleting ? (
+                  <>
+                    <Icon name="progress_activity" size={18} className="animate-spin" />
+                    Deleting
+                  </>
+                ) : (
+                  <>
+                    <Icon name="delete" size={18} />
+                    Delete sample
+                  </>
+                )}
               </button>
               <button
+                type="button"
                 onClick={() => setDeleteConfirm(null)}
                 disabled={deleting}
-                className="flex-1 px-4 py-2 bg-gray-700 text-white rounded-md font-medium hover:bg-gray-600 transition disabled:opacity-50 disabled:cursor-not-allowed"
+                className="btn-secondary flex-1 disabled:opacity-50"
               >
                 Cancel
               </button>
@@ -290,29 +297,21 @@ function Samples() {
       )}
 
       {/* Educational disclaimer */}
-      <div className="mt-8 card bg-yellow-900 bg-opacity-10 border-yellow-600">
+      <section className="glass-panel rounded-card border-l-2 !border-l-guanine-amber p-card-padding">
         <div className="flex items-start gap-3">
-          <svg
-            className="w-6 h-6 text-yellow-500 flex-shrink-0 mt-0.5"
-            fill="currentColor"
-            viewBox="0 0 20 20"
-          >
-            <path
-              fillRule="evenodd"
-              d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-              clipRule="evenodd"
-            />
-          </svg>
+          <Icon name="warning" size={20} className="mt-0.5 shrink-0 text-guanine-amber" />
           <div>
-            <h4 className="text-yellow-500 font-bold mb-1">Educational/Research Use Only</h4>
-            <p className="text-sm text-gray-300">
-              All samples are processed for educational visualization and association modeling.
-              Data represents genomic-anatomic associations with labeled evidence quality,
-              not medical predictions or recommendations.
+            <h2 className="font-label-caps text-label-caps uppercase text-guanine-amber">
+              Educational / research use only
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">
+              All samples are processed for educational visualization and association modeling. Data
+              represents genomic-anatomic associations with labeled evidence quality — not medical
+              predictions or recommendations.
             </p>
           </div>
         </div>
-      </div>
+      </section>
     </div>
   )
 }

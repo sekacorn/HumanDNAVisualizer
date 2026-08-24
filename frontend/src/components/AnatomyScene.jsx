@@ -10,18 +10,19 @@ import * as THREE from 'three'
  * Educational/research purposes only - not for medical diagnosis or treatment.
  */
 
-// Color mapping for evidence levels
-const EVIDENCE_COLORS = {
-  HIGH: '#22c55e',    // green
-  MEDIUM: '#f59e0b',  // amber
-  LOW: '#3b82f6'      // blue
+// Evidence levels borrow the DNA base-pair spectrum so colour means the same
+// thing here as it does everywhere else in the app.
+export const EVIDENCE_COLORS = {
+  HIGH: '#4edea3',   // adenine emerald
+  MEDIUM: '#ffb400', // guanine amber
+  LOW: '#adc6ff'     // cytosine azure
 }
 
-// Node type colors for base anatomy
-const NODE_TYPE_COLORS = {
-  SYSTEM: '#8b5cf6',      // purple
-  ORGAN: '#ec4899',       // pink
-  SUBSTRUCTURE: '#06b6d4' // cyan
+// Unhighlighted anatomy sits in the neutral surface ladder so overlays pop.
+export const NODE_TYPE_COLORS = {
+  SYSTEM: '#b7c8e1',       // primary
+  ORGAN: '#8e9197',        // outline
+  SUBSTRUCTURE: '#44474c'  // outline variant
 }
 
 // Placeholder positions for anatomical structures (simple layout)
@@ -147,12 +148,14 @@ function AnatomyNode({ node, overlays, onHover, onClick, isSelected, isIsolated 
       {/* Hover label */}
       {hovered && (
         <Html distanceFactor={10}>
-          <div className="bg-gray-800 bg-opacity-90 px-3 py-2 rounded-lg shadow-lg border border-gray-600 pointer-events-none">
-            <div className="text-white font-bold text-sm">{node.label}</div>
-            <div className="text-gray-400 text-xs">{node.type}</div>
+          <div className="glass-panel-elevated pointer-events-none whitespace-nowrap rounded-lg px-3 py-2">
+            <div className="text-sm font-semibold text-on-surface">{node.label}</div>
+            <div className="font-code-mono text-[10px] uppercase tracking-wider text-on-surface-variant">
+              {node.type}
+            </div>
             {nodeOverlays.length > 0 && (
-              <div className="text-xs mt-1">
-                <span className="text-gray-300">{nodeOverlays.length} overlay(s)</span>
+              <div className="mt-1 font-code-mono text-[10px] text-secondary">
+                {nodeOverlays.length} overlay(s)
               </div>
             )}
           </div>
@@ -183,7 +186,7 @@ function ConnectionLine({ edge, nodes }) {
 
   return (
     <line geometry={lineGeometry}>
-      <lineBasicMaterial color="#444444" linewidth={2} transparent opacity={0.3} />
+      <lineBasicMaterial color="#b7c8e1" transparent opacity={0.25} />
     </line>
   )
 }
@@ -214,7 +217,9 @@ function AnatomyScene({ anatomyGraph, overlaysVisible = true }) {
 
   return (
     <div style={{ width: '100%', height: '100%', position: 'relative' }}>
-      <Canvas>
+      <Canvas dpr={[1, 2]}>
+        <color attach="background" args={['#0d0e10']} />
+        <fog attach="fog" args={['#0d0e10', 26, 55]} />
         <PerspectiveCamera makeDefault position={[0, 0, 20]} />
         <OrbitControls
           enableDamping
@@ -226,7 +231,7 @@ function AnatomyScene({ anatomyGraph, overlaysVisible = true }) {
         {/* Lighting */}
         <ambientLight intensity={0.4} />
         <directionalLight position={[10, 10, 10]} intensity={0.8} />
-        <directionalLight position={[-10, -10, -10]} intensity={0.4} />
+        <directionalLight position={[-10, -10, -10]} intensity={0.4} color="#adc6ff" />
         <pointLight position={[0, 0, 10]} intensity={0.5} />
 
         {/* Render anatomical structures */}
@@ -248,30 +253,29 @@ function AnatomyScene({ anatomyGraph, overlaysVisible = true }) {
         ))}
 
         {/* Grid helper */}
-        <gridHelper args={[30, 30, '#333333', '#1a1a1a']} position={[0, -8, 0]} />
+        <gridHelper args={[30, 30, '#2a3a4f', '#1b1b1d']} position={[0, -8, 0]} />
       </Canvas>
 
       {/* Hover info panel */}
       {hoveredNode && hoveredOverlays.length > 0 && (
-        <div className="absolute top-4 right-4 bg-gray-800 bg-opacity-95 p-4 rounded-lg shadow-xl border border-gray-600 max-w-sm">
-          <h3 className="text-white font-bold text-lg mb-2">{hoveredNode.label}</h3>
+        <div className="glass-panel-elevated pointer-events-none absolute right-3 top-3 max-w-[min(20rem,calc(100%-1.5rem))] rounded-card p-4">
+          <h3 className="mb-3 font-headline-md text-base text-on-surface">{hoveredNode.label}</h3>
           <div className="space-y-2">
             {hoveredOverlays.map((overlay, idx) => (
-              <div key={idx} className="border-l-2 pl-3 py-1" style={{ borderColor: EVIDENCE_COLORS[overlay.evidence] }}>
-                <div className="text-sm text-gray-300">{overlay.label}</div>
-                <div className="flex items-center gap-2 mt-1">
-                  <span className="text-xs text-gray-400">Evidence:</span>
+              <div key={idx} className="border-l-2 py-1 pl-3" style={{ borderColor: EVIDENCE_COLORS[overlay.evidence] }}>
+                <div className="text-sm leading-relaxed text-on-surface-variant">{overlay.label}</div>
+                <div className="mt-1.5 flex flex-wrap items-center gap-2">
                   <span
-                    className="text-xs font-semibold px-2 py-0.5 rounded"
+                    className="rounded px-2 py-0.5 font-label-caps text-[10px] uppercase tracking-wider"
                     style={{
-                      backgroundColor: EVIDENCE_COLORS[overlay.evidence] + '20',
+                      backgroundColor: EVIDENCE_COLORS[overlay.evidence] + '1f',
                       color: EVIDENCE_COLORS[overlay.evidence]
                     }}
                   >
                     {overlay.evidence}
                   </span>
-                  <span className="text-xs text-gray-400">
-                    Intensity: {(overlay.intensity * 100).toFixed(0)}%
+                  <span className="font-code-mono text-[10px] text-on-surface-variant">
+                    Intensity {(overlay.intensity * 100).toFixed(0)}%
                   </span>
                 </div>
               </div>
@@ -282,9 +286,11 @@ function AnatomyScene({ anatomyGraph, overlaysVisible = true }) {
 
       {/* Selected node info */}
       {selectedNode && (
-        <div className="absolute bottom-4 left-4 bg-gray-800 bg-opacity-95 p-3 rounded-lg shadow-xl border border-blue-500">
-          <div className="text-white font-bold">{selectedNode.label}</div>
-          <div className="text-gray-400 text-sm">Click again to exit isolation mode</div>
+        <div className="glass-panel-elevated absolute bottom-3 left-3 max-w-[calc(100%-1.5rem)] rounded-card border-l-2 !border-l-cytosine-azure p-3">
+          <div className="text-sm font-semibold text-on-surface">{selectedNode.label}</div>
+          <div className="mt-0.5 font-code-mono text-[10px] text-on-surface-variant">
+            Click again to exit isolation mode
+          </div>
         </div>
       )}
     </div>

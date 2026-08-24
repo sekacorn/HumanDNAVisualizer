@@ -11,11 +11,11 @@ import PropTypes from 'prop-types';
 
 function UploadDisclaimer({ onAccept, accepted = false }) {
   return (
-    <div className="card bg-blue-900 bg-opacity-10 border-blue-500">
+    <div className="glass-panel rounded-card border-l-2 !border-l-cytosine-azure p-card-padding">
       <div className="flex items-start gap-3">
         {/* Icon */}
         <svg
-          className="w-6 h-6 text-blue-400 flex-shrink-0 mt-0.5"
+          className="mt-0.5 h-5 w-5 flex-shrink-0 text-cytosine-azure"
           fill="currentColor"
           viewBox="0 0 20 20"
           aria-hidden="true"
@@ -29,41 +29,41 @@ function UploadDisclaimer({ onAccept, accepted = false }) {
 
         {/* Content */}
         <div className="flex-1">
-          <h4 className="text-blue-400 font-bold text-base mb-2">
-            📋 DATA PRIVACY NOTICE
+          <h4 className="mb-2 font-label-caps text-label-caps uppercase text-cytosine-azure">
+            Data privacy notice
           </h4>
 
-          <p className="text-sm text-gray-300 mb-3">
+          <p className="mb-3 text-sm text-on-surface-variant">
             By uploading genomic data, you acknowledge:
           </p>
 
-          <ul className="text-sm text-gray-300 space-y-2 mb-4">
+          <ul className="mb-4 space-y-2 text-sm text-on-surface-variant">
             <li className="flex items-start gap-2">
-              <span className="text-blue-400 flex-shrink-0">•</span>
+              <span className="mt-1.5 h-1 w-1 flex-shrink-0 rounded-full bg-cytosine-azure" />
               <span>
                 This is an <strong>educational/research tool</strong>, not a medical service
               </span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-blue-400 flex-shrink-0">•</span>
+              <span className="mt-1.5 h-1 w-1 flex-shrink-0 rounded-full bg-cytosine-azure" />
               <span>
                 Data is stored securely but you are responsible for its sensitivity
               </span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-blue-400 flex-shrink-0">•</span>
+              <span className="mt-1.5 h-1 w-1 flex-shrink-0 rounded-full bg-cytosine-azure" />
               <span>
                 You have the <strong>right to delete</strong> your data at any time
               </span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-blue-400 flex-shrink-0">•</span>
+              <span className="mt-1.5 h-1 w-1 flex-shrink-0 rounded-full bg-cytosine-azure" />
               <span>
                 We <strong>do not sell or share</strong> your data with third parties
               </span>
             </li>
             <li className="flex items-start gap-2">
-              <span className="text-blue-400 flex-shrink-0">•</span>
+              <span className="mt-1.5 h-1 w-1 flex-shrink-0 rounded-full bg-cytosine-azure" />
               <span>
                 Genetic data may have implications for family members; use responsibly
               </span>
@@ -72,24 +72,24 @@ function UploadDisclaimer({ onAccept, accepted = false }) {
 
           {/* Consent */}
           {onAccept && !accepted && (
-            <div className="mt-4 pt-4 border-t border-gray-700">
-              <label className="flex items-start gap-3 cursor-pointer">
+            <div className="mt-4 border-t border-glass-border pt-4">
+              <label className="flex cursor-pointer items-start gap-3">
                 <input
                   type="checkbox"
                   onChange={(e) => onAccept(e.target.checked)}
-                  className="w-4 h-4 mt-0.5 rounded border-gray-600 bg-gray-800 text-blue-600 focus:ring-blue-500"
+                  className="mt-0.5 h-4 w-4 rounded border-outline-variant bg-surface-container-high accent-[#4edea3]"
                   aria-describedby="consent-description"
                 />
                 <span
                   id="consent-description"
-                  className="text-sm text-gray-300"
+                  className="text-sm leading-relaxed text-on-surface-variant"
                 >
                   I acknowledge this notice and consent to the{' '}
-                  <a href="/terms" className="text-blue-400 hover:underline">
+                  <a href="/terms" className="text-secondary hover:underline">
                     Terms of Service
                   </a>{' '}
                   and{' '}
-                  <a href="/privacy" className="text-blue-400 hover:underline">
+                  <a href="/privacy" className="text-secondary hover:underline">
                     Privacy Policy
                   </a>
                 </span>
@@ -98,8 +98,8 @@ function UploadDisclaimer({ onAccept, accepted = false }) {
           )}
 
           {accepted && (
-            <div className="mt-4 pt-4 border-t border-gray-700">
-              <p className="text-sm text-green-400 flex items-center gap-2">
+            <div className="mt-4 border-t border-glass-border pt-4">
+              <p className="flex items-center gap-2 text-sm text-secondary">
                 <svg
                   className="w-5 h-5"
                   fill="currentColor"

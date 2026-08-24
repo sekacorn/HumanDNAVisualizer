@@ -4,6 +4,7 @@ import Stepper from '../components/Stepper'
 import AnatomyScene from '../components/AnatomyScene'
 import ReactMarkdown from 'react-markdown'
 import VisualizationDisclaimer from '../components/VisualizationDisclaimer'
+import Icon from '../components/ui/Icon'
 
 /**
  * TourViewer Page
@@ -97,29 +98,26 @@ function TourViewer() {
   }
 
   // Get level badge color
+  // Difficulty ramp: emerald -> amber -> crimson, matching Learn Mode.
   const getLevelColor = (level) => {
     switch (level) {
       case 'basic':
-        return 'bg-green-900 bg-opacity-30 border-green-500 text-green-400'
+        return 'border-adenine-emerald/40 bg-adenine-emerald/10 text-adenine-emerald'
       case 'intermediate':
-        return 'bg-amber-900 bg-opacity-30 border-amber-500 text-amber-400'
+        return 'border-guanine-amber/40 bg-guanine-amber/10 text-guanine-amber'
       case 'advanced':
-        return 'bg-red-900 bg-opacity-30 border-red-500 text-red-400'
+        return 'border-thymine-crimson/40 bg-thymine-crimson/10 text-thymine-crimson'
       default:
-        return 'bg-blue-900 bg-opacity-30 border-blue-500 text-blue-400'
+        return 'border-glass-border bg-white/5 text-on-surface-variant'
     }
   }
 
   // Loading state
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex items-center justify-center h-96">
-          <div className="text-center">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
-            <div className="text-xl text-gray-400">Loading tour...</div>
-          </div>
-        </div>
+      <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4">
+        <Icon name="progress_activity" size={44} className="animate-spin text-cytosine-azure" />
+        <p className="font-code-mono text-sm text-on-surface-variant">Loading tour…</p>
       </div>
     )
   }
@@ -127,79 +125,86 @@ function TourViewer() {
   // Error state
   if (error) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="card bg-red-900 bg-opacity-20 border-red-500">
-          <h2 className="text-2xl font-bold text-red-400 mb-2">Error Loading Tour</h2>
-          <p className="text-gray-300 mb-4">{error}</p>
-          <Link
-            to="/learn"
-            className="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 transition inline-block"
-          >
-            Back to Learn Mode
-          </Link>
+      <div className="glass-panel rounded-card border-l-2 !border-l-error p-card-padding">
+        <div className="flex items-start gap-3">
+          <Icon name="error" size={22} className="mt-0.5 shrink-0 text-error" />
+          <div>
+            <h2 className="font-label-caps text-label-caps uppercase text-error">
+              Error loading tour
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">{error}</p>
+            <Link to="/learn" className="btn-ghost mt-4">
+              <Icon name="arrow_back" size={16} />
+              Back to Learn Mode
+            </Link>
+          </div>
         </div>
       </div>
     )
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+    <div className="space-y-bento-gap">
       {/* Header */}
-      <div className="mb-6">
+      <header>
         <Link
           to="/learn"
-          className="text-blue-400 hover:text-blue-300 mb-4 inline-flex items-center gap-2"
+          className="inline-flex items-center gap-1.5 font-label-caps text-label-caps uppercase text-secondary transition-colors hover:text-secondary-fixed"
         >
-          ← Back to Learn Mode
+          <Icon name="arrow_back" size={16} />
+          Back to Learn Mode
         </Link>
-        <h1 className="text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
+        <h1 className="mt-4 font-headline-lg text-2xl tracking-tight text-on-surface md:text-headline-lg">
           {tour.title}
         </h1>
-        <p className="text-gray-400 text-lg mb-4">{tour.description}</p>
-        <div className="flex items-center gap-4 text-sm">
-          <span className={`px-3 py-1 rounded border ${getLevelColor(tour.level)}`}>
-            {tour.level.charAt(0).toUpperCase() + tour.level.slice(1)}
+        <p className="mt-2 max-w-2xl text-base text-on-surface-variant">{tour.description}</p>
+        <div className="mt-4 flex flex-wrap items-center gap-3">
+          <span
+            className={`rounded border px-2 py-1 font-label-caps text-label-caps uppercase ${getLevelColor(tour.level)}`}
+          >
+            {tour.level}
           </span>
-          <span className="text-gray-500">⏱️ {tour.estimatedMinutes} minutes</span>
-          <span className="text-gray-500">📚 {tour.steps.length} steps</span>
+          <span className="flex items-center gap-1.5 font-code-mono text-xs text-on-surface-variant">
+            <Icon name="schedule" size={14} />
+            {tour.estimatedMinutes} minutes
+          </span>
+          <span className="flex items-center gap-1.5 font-code-mono text-xs text-on-surface-variant">
+            <Icon name="list" size={14} />
+            {tour.steps.length} steps
+          </span>
         </div>
-      </div>
+      </header>
 
-      {/* Educational Disclaimer */}
-      <div className="mb-6">
-        <VisualizationDisclaimer />
-      </div>
+      <VisualizationDisclaimer />
 
-      {/* Stepper */}
-      <div className="mb-8">
-        <Stepper
-          steps={tour.steps}
-          currentStep={currentStep}
-          onStepClick={handleStepClick}
-        />
-      </div>
+      <Stepper steps={tour.steps} currentStep={currentStep} onStepClick={handleStepClick} />
 
       {/* Main Content Grid */}
-      <div className="grid lg:grid-cols-2 gap-6 mb-6">
+      <div className="grid grid-cols-1 gap-bento-gap lg:grid-cols-2">
         {/* Explanation Panel */}
-        <div className="card">
-          <h2 className="text-2xl font-bold text-blue-400 mb-4">
-            Step {currentStep + 1}: {step.title}
-          </h2>
+        <section className="glass-panel rounded-card p-card-padding">
+          <p className="font-label-caps text-label-caps uppercase text-secondary">
+            Step {currentStep + 1} of {tour.steps.length}
+          </p>
+          <h2 className="mt-2 font-headline-md text-xl text-on-surface">{step.title}</h2>
 
           {/* Markdown Content */}
-          <div className="prose prose-invert prose-blue max-w-none">
+          <div className="tour-prose mt-4">
             <ReactMarkdown>{step.explanation}</ReactMarkdown>
           </div>
 
           {/* Interactive Prompt */}
           {step.interactivePrompt && (
-            <div className="mt-6 card bg-purple-900 bg-opacity-20 border-purple-500">
+            <div className="mt-6 rounded-card border border-cytosine-azure/30 bg-cytosine-azure/[0.06] p-4">
               <div className="flex items-start gap-3">
-                <span className="text-2xl">💡</span>
+                <Icon name="lightbulb" size={20} className="mt-0.5 shrink-0 text-cytosine-azure" />
                 <div>
-                  <h4 className="text-purple-400 font-bold mb-1">Try This</h4>
-                  <p className="text-gray-300 text-sm">{step.interactivePrompt}</p>
+                  <h3 className="font-label-caps text-label-caps uppercase text-cytosine-azure">
+                    Try this
+                  </h3>
+                  <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">
+                    {step.interactivePrompt}
+                  </p>
                 </div>
               </div>
             </div>
@@ -207,124 +212,146 @@ function TourViewer() {
 
           {/* Further Reading */}
           {step.furtherReading && step.furtherReading.length > 0 && (
-            <div className="mt-6">
-              <h4 className="text-white font-bold mb-2">Further Reading</h4>
-              <ul className="space-y-1">
-                {step.furtherReading.map((item, index) => (
-                  <li key={index} className="text-sm text-gray-400">
-                    • {item.title} ({item.type})
+            <div className="mt-6 border-t border-glass-border pt-4">
+              <h3 className="font-label-caps text-label-caps uppercase text-on-surface-variant">
+                Further reading
+              </h3>
+              <ul className="mt-3 space-y-1.5">
+                {step.furtherReading.map((item) => (
+                  <li
+                    key={item.title}
+                    className="flex items-start gap-2 font-code-mono text-[11px] leading-relaxed text-on-surface-variant"
+                  >
+                    <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-secondary" />
+                    {item.title} ({item.type})
                   </li>
                 ))}
               </ul>
             </div>
           )}
-        </div>
+        </section>
 
         {/* 3D Visualization Panel */}
-        <div className="card" style={{ height: '600px' }}>
-          <h3 className="text-lg font-bold text-white mb-4">3D Anatomy View</h3>
-          <div className="h-full">
+        <section className="glass-panel rounded-card flex flex-col overflow-hidden">
+          <h3 className="border-b border-glass-border px-card-padding py-4 font-label-caps text-label-caps uppercase text-on-surface">
+            3D anatomy view
+          </h3>
+
+          <div className="viewport-canvas h-[40vh] min-h-[280px] lg:h-[420px]">
             <Suspense
               fallback={
-                <div className="flex items-center justify-center h-full">
-                  <div className="text-xl text-gray-400">Initializing 3D scene...</div>
+                <div className="flex h-full flex-col items-center justify-center gap-3">
+                  <Icon
+                    name="progress_activity"
+                    size={36}
+                    className="animate-spin text-cytosine-azure"
+                  />
+                  <p className="font-code-mono text-xs text-on-surface-variant">
+                    Initializing 3D scene…
+                  </p>
                 </div>
               }
             >
               {createAnatomyGraphFromStep() && (
-                <AnatomyScene
-                  anatomyGraph={createAnatomyGraphFromStep()}
-                  overlaysVisible={true}
-                />
+                <AnatomyScene anatomyGraph={createAnatomyGraphFromStep()} overlaysVisible />
               )}
             </Suspense>
           </div>
 
           {/* Overlay Legend */}
-          <div className="mt-4">
-            <h4 className="text-sm font-bold text-gray-400 mb-2">Highlighted Structures:</h4>
-            <div className="flex flex-wrap gap-2">
+          <div className="border-t border-glass-border p-card-padding">
+            <h4 className="font-label-caps text-[10px] uppercase tracking-[0.16em] text-on-surface-variant/70">
+              Highlighted structures
+            </h4>
+            <div className="mt-3 flex flex-wrap gap-2">
               {step.highlightNodeIds.map((nodeId) => (
                 <span
                   key={nodeId}
-                  className="px-2 py-1 bg-blue-900 bg-opacity-30 border border-blue-500 rounded text-xs text-blue-400"
+                  className="rounded border border-cytosine-azure/30 bg-cytosine-azure/10 px-2 py-1 font-code-mono text-[11px] text-cytosine-azure"
                 >
                   {nodeId.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase())}
                 </span>
               ))}
             </div>
           </div>
-        </div>
+        </section>
       </div>
 
       {/* Navigation Controls */}
-      <div className="card">
-        <div className="flex items-center justify-between">
-          <button
-            onClick={handlePrevious}
-            disabled={currentStep === 0}
-            className={`px-6 py-2 rounded font-medium transition ${
-              currentStep === 0
-                ? 'bg-gray-700 text-gray-500 cursor-not-allowed'
-                : 'bg-blue-600 text-white hover:bg-blue-700'
-            }`}
-          >
-            ← Previous
+      <nav
+        aria-label="Tour navigation"
+        className="glass-panel rounded-card flex items-center justify-between gap-3 p-4"
+      >
+        <button
+          type="button"
+          onClick={handlePrevious}
+          disabled={currentStep === 0}
+          className="btn-secondary !px-4 disabled:cursor-not-allowed disabled:opacity-40"
+        >
+          <Icon name="arrow_back" size={18} />
+          <span className="hidden sm:inline">Previous</span>
+        </button>
+
+        <span className="font-code-mono text-xs text-on-surface-variant">
+          {currentStep + 1} / {tour.steps.length}
+        </span>
+
+        {currentStep < tour.steps.length - 1 ? (
+          <button type="button" onClick={handleNext} className="btn-primary btn-scan !px-4">
+            <span className="hidden sm:inline">Next</span>
+            <Icon name="arrow_forward" size={18} />
           </button>
-
-          <div className="text-gray-400 text-sm">
-            Step {currentStep + 1} of {tour.steps.length}
-          </div>
-
-          {currentStep < tour.steps.length - 1 ? (
-            <button
-              onClick={handleNext}
-              className="px-6 py-2 bg-blue-600 text-white rounded font-medium hover:bg-blue-700 transition"
-            >
-              Next →
-            </button>
-          ) : (
-            <Link
-              to="/learn"
-              className="px-6 py-2 bg-green-600 text-white rounded font-medium hover:bg-green-700 transition"
-            >
-              Complete Tour ✓
-            </Link>
-          )}
-        </div>
-      </div>
+        ) : (
+          <Link to="/learn" className="btn-primary btn-scan !px-4">
+            <Icon name="check" size={18} />
+            <span className="hidden sm:inline">Complete tour</span>
+          </Link>
+        )}
+      </nav>
 
       {/* Learning Objectives */}
       {currentStep === 0 && (
-        <div className="card bg-blue-900 bg-opacity-10 border-blue-600 mt-6">
-          <h3 className="text-xl font-bold text-blue-400 mb-4">Learning Objectives</h3>
-          <ul className="space-y-2 text-gray-300">
-            {tour.learningObjectives.map((objective, index) => (
-              <li key={index} className="flex items-start gap-2">
-                <span className="text-blue-400">✓</span>
-                <span>{objective}</span>
+        <section className="glass-panel rounded-card p-card-padding">
+          <h3 className="flex items-center gap-2 font-label-caps text-label-caps uppercase text-cytosine-azure">
+            <Icon name="flag" size={18} />
+            Learning objectives
+          </h3>
+          <ul className="mt-4 space-y-2.5">
+            {tour.learningObjectives.map((objective) => (
+              <li
+                key={objective}
+                className="flex items-start gap-2.5 text-sm leading-relaxed text-on-surface-variant"
+              >
+                <Icon name="check_circle" size={16} className="mt-0.5 shrink-0 text-secondary" />
+                {objective}
               </li>
             ))}
           </ul>
-        </div>
+        </section>
       )}
 
       {/* Tour Metadata (Last Step) */}
       {currentStep === tour.steps.length - 1 && (
-        <div className="card bg-purple-900 bg-opacity-10 border-purple-600 mt-6">
-          <h3 className="text-xl font-bold text-purple-400 mb-4">Educational Standards</h3>
-          <div className="space-y-2 text-gray-300 text-sm">
-            {tour.metadata.educationalStandards?.map((standard, index) => (
-              <div key={index} className="flex items-start gap-2">
-                <span className="text-purple-400">•</span>
-                <span>{standard}</span>
-              </div>
+        <section className="glass-panel rounded-card p-card-padding">
+          <h3 className="flex items-center gap-2 font-label-caps text-label-caps uppercase text-guanine-amber">
+            <Icon name="school" size={18} />
+            Educational standards
+          </h3>
+          <ul className="mt-4 space-y-2">
+            {tour.metadata.educationalStandards?.map((standard) => (
+              <li
+                key={standard}
+                className="flex items-start gap-2.5 text-sm leading-relaxed text-on-surface-variant"
+              >
+                <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-guanine-amber" />
+                {standard}
+              </li>
             ))}
-          </div>
-          <div className="mt-4 text-xs text-gray-500">
-            Version {tour.metadata.version} • Last updated {tour.metadata.lastUpdated}
-          </div>
-        </div>
+          </ul>
+          <p className="mt-4 border-t border-glass-border pt-4 font-code-mono text-[11px] text-on-surface-variant/60">
+            Version {tour.metadata.version} · last updated {tour.metadata.lastUpdated}
+          </p>
+        </section>
       )}
     </div>
   )

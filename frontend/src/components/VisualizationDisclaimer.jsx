@@ -9,11 +9,11 @@
 
 function VisualizationDisclaimer() {
   return (
-    <div className="card bg-purple-900 bg-opacity-10 border-purple-500">
+    <div className="glass-panel rounded-card border-l-2 !border-l-cytosine-azure p-card-padding">
       <div className="flex items-start gap-3">
         {/* Icon */}
         <svg
-          className="w-6 h-6 text-purple-400 flex-shrink-0 mt-0.5"
+          className="mt-0.5 h-5 w-5 flex-shrink-0 text-cytosine-azure"
           fill="currentColor"
           viewBox="0 0 20 20"
           aria-hidden="true"
@@ -23,11 +23,11 @@ function VisualizationDisclaimer() {
 
         {/* Content */}
         <div className="flex-1">
-          <h4 className="text-purple-400 font-bold text-base mb-2">
-            📊 VISUALIZATION DISCLAIMER
+          <h4 className="mb-2 font-label-caps text-label-caps uppercase text-cytosine-azure">
+            Visualization disclaimer
           </h4>
 
-          <p className="text-sm text-gray-300 leading-relaxed">
+          <p className="text-sm leading-relaxed text-on-surface-variant">
             This 3D visualization shows <strong>genomic-anatomic associations</strong> from current
             data models. These are <strong>NOT</strong> medical predictions or{' '}
             <span className="underline">diagnoses</span>. Evidence
@@ -35,8 +35,8 @@ function VisualizationDisclaimer() {
             not medical certainty. Educational and research purposes only.
           </p>
 
-          <div className="mt-3 pt-3 border-t border-gray-700">
-            <p className="text-xs text-gray-400">
+          <div className="mt-3 border-t border-glass-border pt-3">
+            <p className="font-code-mono text-xs leading-relaxed text-on-surface-variant/70">
               <strong>Note:</strong> Always consult qualified healthcare professionals for medical
               decisions. This platform does not provide medical advice or{' '}
               <span className="underline">recommendations</span>.

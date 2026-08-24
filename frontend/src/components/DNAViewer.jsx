@@ -3,43 +3,69 @@ import { Canvas, useFrame } from '@react-three/fiber'
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei'
 import * as THREE from 'three'
 
-// DNA Helix Component
-function DNAHelix() {
+/**
+ * Base-pair colour spectrum from the design system. Colour here is data
+ * signification, not decoration: each base keeps its hue everywhere in the app.
+ */
+export const BASE_COLORS = {
+  A: '#4edea3', // adenine — emerald
+  T: '#ffb4ab', // thymine — crimson
+  G: '#ffb400', // guanine — amber
+  C: '#adc6ff', // cytosine — azure
+}
+
+const BACKBONE_COLOR = '#b7c8e1'
+const PAIRINGS = [
+  ['A', 'T'],
+  ['T', 'A'],
+  ['G', 'C'],
+  ['C', 'G'],
+]
+
+function Line({ start, end, color, opacity = 1 }) {
+  const lineGeometry = useMemo(
+    () =>
+      new THREE.BufferGeometry().setFromPoints([
+        new THREE.Vector3(...start),
+        new THREE.Vector3(...end),
+      ]),
+    [start, end]
+  )
+
+  return (
+    <line geometry={lineGeometry}>
+      <lineBasicMaterial color={color} transparent opacity={opacity} />
+    </line>
+  )
+}
+
+function DNAHelix({ spinning = true, showBackbone = true, highlightIndex = null }) {
   const groupRef = useRef()
 
-  // Rotate the helix slowly
   useFrame((state, delta) => {
-    if (groupRef.current) {
+    if (spinning && groupRef.current) {
       groupRef.current.rotation.y += delta * 0.2
     }
   })
 
-  // Generate DNA helix geometry
   const helixData = useMemo(() => {
     const pairs = []
-    const numPairs = 20
+    const numPairs = 24
     const radius = 2
-    const height = 10
+    const height = 11
     const rotationsPerPair = (Math.PI * 2) / 10
 
-    for (let i = 0; i < numPairs; i++) {
+    for (let i = 0; i < numPairs; i += 1) {
       const y = (i / numPairs) * height - height / 2
       const angle = i * rotationsPerPair
-
-      // First strand (backbone)
-      const x1 = Math.cos(angle) * radius
-      const z1 = Math.sin(angle) * radius
-
-      // Second strand (opposite side)
-      const x2 = Math.cos(angle + Math.PI) * radius
-      const z2 = Math.sin(angle + Math.PI) * radius
+      const [left, right] = PAIRINGS[i % PAIRINGS.length]
 
       pairs.push({
         y,
-        strand1: [x1, y, z1],
-        strand2: [x2, y, z2],
-        // Alternate base pair colors (A-T: blue-yellow, G-C: red-green)
-        color: i % 2 === 0 ? '#3b82f6' : '#ef4444'
+        strand1: [Math.cos(angle) * radius, y, Math.sin(angle) * radius],
+        strand2: [Math.cos(angle + Math.PI) * radius, y, Math.sin(angle + Math.PI) * radius],
+        leftBase: left,
+        rightBase: right,
       })
     }
 
@@ -48,96 +74,94 @@ function DNAHelix() {
 
   return (
     <group ref={groupRef}>
-      {helixData.map((pair, index) => (
-        <group key={index}>
-          {/* Backbone spheres */}
-          <mesh position={pair.strand1}>
-            <sphereGeometry args={[0.15, 16, 16]} />
-            <meshStandardMaterial color="#8b5cf6" />
-          </mesh>
-          <mesh position={pair.strand2}>
-            <sphereGeometry args={[0.15, 16, 16]} />
-            <meshStandardMaterial color="#8b5cf6" />
-          </mesh>
+      {helixData.map((pair, index) => {
+        const highlighted = highlightIndex === index
+        const leftColor = BASE_COLORS[pair.leftBase]
+        const rightColor = BASE_COLORS[pair.rightBase]
+        const midpoint = [
+          (pair.strand1[0] + pair.strand2[0]) / 2,
+          pair.y,
+          (pair.strand1[2] + pair.strand2[2]) / 2,
+        ]
 
-          {/* Base pair connector */}
-          <Line
-            start={pair.strand1}
-            end={pair.strand2}
-            color={pair.color}
-            lineWidth={2}
-          />
-
-          {/* Base pair spheres */}
-          <mesh position={[(pair.strand1[0] + pair.strand2[0]) / 2, pair.y, (pair.strand1[2] + pair.strand2[2]) / 2]}>
-            <sphereGeometry args={[0.1, 16, 16]} />
-            <meshStandardMaterial color={pair.color} />
-          </mesh>
-        </group>
-      ))}
-
-      {/* Connect backbone with lines */}
-      {helixData.slice(0, -1).map((pair, index) => {
-        const nextPair = helixData[index + 1]
         return (
-          <group key={`backbone-${index}`}>
+          <group key={pair.y}>
+            {/* Backbone nodes */}
+            <mesh position={pair.strand1}>
+              <sphereGeometry args={[highlighted ? 0.22 : 0.16, 20, 20]} />
+              <meshStandardMaterial
+                color={leftColor}
+                emissive={leftColor}
+                emissiveIntensity={highlighted ? 1.2 : 0.45}
+                roughness={0.35}
+                metalness={0.15}
+              />
+            </mesh>
+            <mesh position={pair.strand2}>
+              <sphereGeometry args={[highlighted ? 0.22 : 0.16, 20, 20]} />
+              <meshStandardMaterial
+                color={rightColor}
+                emissive={rightColor}
+                emissiveIntensity={highlighted ? 1.2 : 0.45}
+                roughness={0.35}
+                metalness={0.15}
+              />
+            </mesh>
+
+            {/* Hydrogen bond between the pair */}
             <Line
               start={pair.strand1}
-              end={nextPair.strand1}
-              color="#a78bfa"
-              lineWidth={3}
+              end={midpoint}
+              color={leftColor}
+              opacity={highlighted ? 1 : 0.7}
             />
             <Line
-              start={pair.strand2}
-              end={nextPair.strand2}
-              color="#a78bfa"
-              lineWidth={3}
+              start={midpoint}
+              end={pair.strand2}
+              color={rightColor}
+              opacity={highlighted ? 1 : 0.7}
             />
           </group>
         )
       })}
+
+      {/* Sugar-phosphate backbone */}
+      {showBackbone &&
+        helixData.slice(0, -1).map((pair, index) => {
+          const next = helixData[index + 1]
+          return (
+            <group key={`backbone-${pair.y}`}>
+              <Line start={pair.strand1} end={next.strand1} color={BACKBONE_COLOR} opacity={0.55} />
+              <Line start={pair.strand2} end={next.strand2} color={BACKBONE_COLOR} opacity={0.55} />
+            </group>
+          )
+        })}
     </group>
   )
 }
 
-// Line component for connecting points
-function Line({ start, end, color, lineWidth }) {
-  const points = useMemo(() => [
-    new THREE.Vector3(...start),
-    new THREE.Vector3(...end)
-  ], [start, end])
-
-  const lineGeometry = useMemo(() => {
-    const geometry = new THREE.BufferGeometry().setFromPoints(points)
-    return geometry
-  }, [points])
-
+/**
+ * Interactive double-helix viewport. Sizing is delegated to the parent so the
+ * same component works in a full-bleed desktop panel and a short mobile card.
+ */
+function DNAViewer({ spinning = true, showGrid = true, showBackbone = true, highlightIndex = null }) {
   return (
-    <line geometry={lineGeometry}>
-      <lineBasicMaterial color={color} linewidth={lineWidth} />
-    </line>
-  )
-}
-
-// Main DNAViewer component
-function DNAViewer() {
-  return (
-    <div style={{ width: '100%', height: '100%' }}>
-      <Canvas>
+    <div className="h-full w-full">
+      <Canvas dpr={[1, 2]}>
         <PerspectiveCamera makeDefault position={[0, 0, 15]} />
-        <OrbitControls enableDamping dampingFactor={0.05} />
+        <OrbitControls enableDamping dampingFactor={0.05} enablePan makeDefault />
 
-        {/* Lighting */}
-        <ambientLight intensity={0.5} />
+        <color attach="background" args={['#0d0e10']} />
+        <fog attach="fog" args={['#0d0e10', 18, 34]} />
+
+        <ambientLight intensity={0.45} />
         <directionalLight position={[10, 10, 5]} intensity={1} />
-        <directionalLight position={[-10, -10, -5]} intensity={0.5} />
-        <pointLight position={[0, 0, 0]} intensity={0.5} />
+        <directionalLight position={[-10, -10, -5]} intensity={0.4} color="#adc6ff" />
+        <pointLight position={[0, 0, 6]} intensity={0.6} color="#4edea3" />
 
-        {/* DNA Helix */}
-        <DNAHelix />
+        <DNAHelix spinning={spinning} showBackbone={showBackbone} highlightIndex={highlightIndex} />
 
-        {/* Grid helper */}
-        <gridHelper args={[20, 20, '#444444', '#222222']} position={[0, -6, 0]} />
+        {showGrid && <gridHelper args={[24, 24, '#2a3a4f', '#1b1b1d']} position={[0, -6.5, 0]} />}
       </Canvas>
     </div>
   )

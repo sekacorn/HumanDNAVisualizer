@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import EvidenceBadge from './EvidenceBadge'
+import Icon from './ui/Icon'
 
 /**
  * NodeDetailPanel Component
@@ -12,48 +13,48 @@ function NodeDetailPanel({ node, overlays = [], onClose, className = '' }) {
   if (!node) return null
 
   return (
-    <div className={`card ${className}`}>
+    <div className={`glass-panel rounded-card p-card-padding ${className}`}>
       {/* Header */}
-      <div className="flex items-start justify-between mb-4">
-        <div>
-          <h3 className="text-xl font-bold text-white mb-1">{node.label}</h3>
-          <span className="text-sm text-gray-400">{node.type}</span>
+      <div className="mb-4 flex items-start justify-between gap-3">
+        <div className="min-w-0">
+          <h3 className="font-headline-md text-lg text-on-surface">{node.label}</h3>
+          <span className="mt-1 block font-label-caps text-[10px] uppercase tracking-[0.16em] text-on-surface-variant/70">
+            {node.type}
+          </span>
         </div>
         {onClose && (
           <button
+            type="button"
             onClick={onClose}
-            className="text-gray-400 hover:text-white transition"
+            className="tap-target -mr-2 -mt-2 flex shrink-0 items-center justify-center rounded-full text-on-surface-variant transition-colors hover:text-on-surface"
             aria-label="Close detail panel"
           >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                strokeWidth={2}
-                d="M6 18L18 6M6 6l12 12"
-              />
-            </svg>
+            <Icon name="close" />
           </button>
         )}
       </div>
 
       {/* Node ID */}
-      <div className="mb-4 p-2 bg-gray-800 bg-opacity-50 rounded">
-        <div className="text-xs text-gray-500">Node ID</div>
-        <code className="text-sm text-blue-400">{node.id}</code>
+      <div className="mb-4 rounded-lg border border-glass-border bg-white/[0.02] px-3 py-2">
+        <div className="font-label-caps text-[10px] uppercase tracking-[0.16em] text-on-surface-variant/70">
+          Node ID
+        </div>
+        <code className="mt-1 block break-all font-code-mono text-xs text-cytosine-azure">
+          {node.id}
+        </code>
       </div>
 
       {/* Overlays */}
       {overlays.length > 0 ? (
         <div>
-          <h4 className="text-sm font-semibold text-gray-300 mb-3">
+          <h4 className="mb-3 font-label-caps text-label-caps uppercase text-on-surface-variant">
             Associations ({overlays.length})
           </h4>
           <div className="space-y-3 max-h-64 overflow-y-auto">
             {overlays.map((overlay, idx) => (
               <div
                 key={idx}
-                className="p-3 bg-gray-800 bg-opacity-50 rounded border border-gray-700"
+                className="rounded-lg border border-glass-border bg-white/[0.02] p-3"
               >
                 {/* Evidence badge */}
                 <div className="mb-2">
@@ -61,17 +62,23 @@ function NodeDetailPanel({ node, overlays = [], onClose, className = '' }) {
                 </div>
 
                 {/* Label */}
-                <p className="text-sm text-gray-300 mb-2">{overlay.label}</p>
+                <p className="mb-3 text-sm leading-relaxed text-on-surface-variant">
+                  {overlay.label}
+                </p>
 
                 {/* Intensity */}
                 <div className="mb-2">
-                  <div className="flex items-center justify-between text-xs text-gray-400 mb-1">
-                    <span>Association Strength</span>
-                    <span>{(overlay.intensity * 100).toFixed(0)}%</span>
+                  <div className="mb-2 flex items-center justify-between">
+                    <span className="font-label-caps text-[10px] uppercase tracking-[0.16em] text-on-surface-variant/70">
+                      Association strength
+                    </span>
+                    <span className="font-code-mono text-xs text-secondary">
+                      {(overlay.intensity * 100).toFixed(0)}%
+                    </span>
                   </div>
-                  <div className="w-full bg-gray-700 rounded-full h-2">
+                  <div className="progress-track">
                     <div
-                      className="bg-blue-500 h-2 rounded-full transition-all"
+                      className="progress-fill"
                       style={{ width: `${overlay.intensity * 100}%` }}
                       role="progressbar"
                       aria-valuenow={overlay.intensity * 100}
@@ -84,12 +91,18 @@ function NodeDetailPanel({ node, overlays = [], onClose, className = '' }) {
                 {/* Sources */}
                 {overlay.sources && overlay.sources.length > 0 && (
                   <details className="mt-2">
-                    <summary className="text-xs text-gray-500 cursor-pointer hover:text-gray-400">
+                    <summary className="cursor-pointer font-label-caps text-[10px] uppercase tracking-[0.16em] text-on-surface-variant/70 transition-colors hover:text-on-surface">
                       View sources ({overlay.sources.length})
                     </summary>
-                    <ul className="mt-2 space-y-1 text-xs text-gray-400 ml-4">
-                      {overlay.sources.map((source, sidx) => (
-                        <li key={sidx} className="list-disc">{source}</li>
+                    <ul className="ml-1 mt-2 space-y-1">
+                      {overlay.sources.map((source) => (
+                        <li
+                          key={source}
+                          className="flex items-start gap-2 font-code-mono text-[11px] leading-relaxed text-on-surface-variant"
+                        >
+                          <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-cytosine-azure" />
+                          {source}
+                        </li>
                       ))}
                     </ul>
                   </details>
@@ -99,29 +112,19 @@ function NodeDetailPanel({ node, overlays = [], onClose, className = '' }) {
           </div>
         </div>
       ) : (
-        <div className="text-center py-6 text-gray-500">
-          <svg
-            className="w-12 h-12 mx-auto mb-2 text-gray-600"
-            fill="none"
-            stroke="currentColor"
-            viewBox="0 0 24 24"
-          >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
-            />
-          </svg>
-          <p className="text-sm">No associations for this structure</p>
+        <div className="flex flex-col items-center py-8 text-center">
+          <Icon name="inbox" size={40} className="text-on-surface-variant/30" />
+          <p className="mt-3 text-sm text-on-surface-variant">
+            No associations for this structure
+          </p>
         </div>
       )}
 
       {/* Educational note */}
-      <div className="mt-4 pt-4 border-t border-gray-700">
-        <p className="text-xs text-gray-500">
-          <strong>Note:</strong> Associations represent genomic-anatomic models
-          from current data. Not medical advice or predictions.
+      <div className="mt-4 border-t border-glass-border pt-4">
+        <p className="font-code-mono text-[11px] leading-relaxed text-on-surface-variant/70">
+          <strong className="text-on-surface">Note:</strong> associations represent
+          genomic-anatomic models from current data. Not medical advice or predictions.
         </p>
       </div>
     </div>

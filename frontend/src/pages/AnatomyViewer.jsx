@@ -1,10 +1,12 @@
 import { Suspense, useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import AnatomyScene from '../components/AnatomyScene'
-import OverlayLegend from '../components/OverlayLegend'
-import NodeDetailPanel from '../components/NodeDetailPanel'
+import AnatomyScene, { EVIDENCE_COLORS, NODE_TYPE_COLORS } from '../components/AnatomyScene'
 import ExplainButton from '../components/ExplainButton'
 import VisualizationDisclaimer from '../components/VisualizationDisclaimer'
+import Icon from '../components/ui/Icon'
+import PageHeader from '../components/ui/PageHeader'
+import StatCard from '../components/ui/StatCard'
+import StatusPill from '../components/ui/StatusPill'
 import { getAnatomyGraph, getAnatomyGraphStats } from '../services/api'
 
 /**
@@ -13,6 +15,30 @@ import { getAnatomyGraph, getAnatomyGraphStats } from '../services/api'
  * Interactive 3D anatomy viewer that renders genomic variant overlays on anatomical structures.
  * Educational/research purposes only - not for medical diagnosis or treatment.
  */
+
+const EVIDENCE_LEGEND = [
+  ['High evidence', 'Well-established, replicated findings', EVIDENCE_COLORS.HIGH],
+  ['Medium evidence', 'Some evidence, requires validation', EVIDENCE_COLORS.MEDIUM],
+  ['Low evidence', 'Preliminary or indirect associations', EVIDENCE_COLORS.LOW],
+]
+
+const INTERACTION_GUIDE = [
+  ['Rotate', 'Click and drag anywhere in the 3D view'],
+  ['Zoom', 'Mouse wheel or pinch gesture'],
+  ['Pan', 'Right-click and drag, or two-finger drag'],
+  ['Hover', 'See overlay details for each structure'],
+  ['Click', 'Isolate a specific anatomical structure'],
+  ['Toggle', 'Use the controls to show or hide overlays'],
+]
+
+const ABOUT = [
+  'Deterministic mapping from genomic variants to anatomy',
+  'All associations labelled with evidence quality',
+  'Overlay intensity reflects association strength',
+  'Placeholder geometry for demonstration purposes',
+  'Built with React Three Fiber and Three.js',
+  'Educational / research visualization only',
+]
 
 function AnatomyViewer() {
   const [searchParams] = useSearchParams()
@@ -23,8 +49,6 @@ function AnatomyViewer() {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState(null)
   const [overlaysVisible, setOverlaysVisible] = useState(true)
-  const [selectedNode, setSelectedNode] = useState(null)
-  const [selectedOverlays, setSelectedOverlays] = useState([])
 
   // Load anatomy graph data
   useEffect(() => {
@@ -64,13 +88,11 @@ function AnatomyViewer() {
   // Loading state
   if (loading) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="flex items-center justify-center h-96">
-          <div className="text-center">
-            <div className="inline-block animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-blue-500 mb-4"></div>
-            <div className="text-xl text-gray-400">Loading anatomy visualization...</div>
-          </div>
-        </div>
+      <div className="flex min-h-[50vh] flex-col items-center justify-center gap-4">
+        <Icon name="progress_activity" size={44} className="animate-spin text-cytosine-azure" />
+        <p className="font-code-mono text-sm text-on-surface-variant">
+          Loading anatomy visualization…
+        </p>
       </div>
     )
   }
@@ -78,208 +100,218 @@ function AnatomyViewer() {
   // Error state
   if (error) {
     return (
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <div className="card bg-red-900 bg-opacity-20 border-red-500">
-          <h2 className="text-2xl font-bold text-red-400 mb-2">Error Loading Visualization</h2>
-          <p className="text-gray-300">{error}</p>
-          <button
-            onClick={() => window.location.reload()}
-            className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700 transition"
-          >
-            Retry
-          </button>
+      <div className="glass-panel rounded-card border-l-2 !border-l-error p-card-padding">
+        <div className="flex items-start gap-3">
+          <Icon name="error" size={22} className="mt-0.5 shrink-0 text-error" />
+          <div>
+            <h2 className="font-label-caps text-label-caps uppercase text-error">
+              Error loading visualization
+            </h2>
+            <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">{error}</p>
+            <button
+              type="button"
+              onClick={() => window.location.reload()}
+              className="btn-ghost mt-4"
+            >
+              <Icon name="refresh" size={16} />
+              Retry
+            </button>
+          </div>
         </div>
       </div>
     )
   }
 
-  // Main content
   return (
-    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-      {/* Header */}
-      <div className="mb-6">
-        <h1 className="text-4xl font-bold mb-2 text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-purple-500">
-          3D Anatomy Visualization
-        </h1>
-        <p className="text-gray-400">
-          Sample ID: {sampleId} | Rules Version: {anatomyGraph?.rulesVersion}
-        </p>
-      </div>
+    <div className="space-y-bento-gap">
+      <PageHeader
+        eyebrow="Anatomy map"
+        title="3D Anatomy Visualization"
+        subtitle="Genomic variant overlays projected onto anatomical structures, graded by evidence quality."
+        actions={
+          <>
+            <StatusPill tone="processing">Sample {sampleId}</StatusPill>
+            {anatomyGraph?.rulesVersion && (
+              <span className="rounded-full border border-glass-border bg-white/[0.03] px-3 py-1.5 font-code-mono text-xs text-on-surface-variant">
+                {anatomyGraph.rulesVersion}
+              </span>
+            )}
+          </>
+        }
+      />
 
-      {/* Stats Panel */}
+      {/* Stats */}
       {stats && (
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-          <div className="card bg-blue-900 bg-opacity-20 border-blue-500">
-            <div className="text-3xl font-bold text-blue-400">{stats.overlayCount}</div>
-            <div className="text-sm text-gray-400">Total Overlays</div>
-          </div>
-          <div className="card bg-green-900 bg-opacity-20 border-green-500">
-            <div className="text-3xl font-bold text-green-400">{stats.highEvidenceCount}</div>
-            <div className="text-sm text-gray-400">High Evidence</div>
-          </div>
-          <div className="card bg-amber-900 bg-opacity-20 border-amber-500">
-            <div className="text-3xl font-bold text-amber-400">{stats.mediumEvidenceCount}</div>
-            <div className="text-sm text-gray-400">Medium Evidence</div>
-          </div>
-          <div className="card bg-blue-900 bg-opacity-20 border-blue-500">
-            <div className="text-3xl font-bold text-blue-400">{stats.lowEvidenceCount}</div>
-            <div className="text-sm text-gray-400">Low Evidence</div>
-          </div>
+        <div className="grid grid-cols-2 gap-bento-gap lg:grid-cols-4">
+          <StatCard label="Total overlays" value={stats.overlayCount ?? 0} icon="layers" accent="azure" />
+          <StatCard label="High evidence" value={stats.highEvidenceCount ?? 0} icon="verified" accent="emerald" />
+          <StatCard label="Medium evidence" value={stats.mediumEvidenceCount ?? 0} icon="help" accent="amber" />
+          <StatCard label="Low evidence" value={stats.lowEvidenceCount ?? 0} icon="scatter_plot" accent="azure" />
         </div>
       )}
 
-      {/* Visualization Disclaimer */}
-      <div className="mb-6">
-        <VisualizationDisclaimer />
-      </div>
+      <VisualizationDisclaimer />
 
-      {/* Controls Panel */}
-      <div className="card mb-6">
-        <div className="flex items-center justify-between">
-          <div>
-            <h3 className="text-lg font-bold text-white mb-1">Visualization Controls</h3>
-            <p className="text-sm text-gray-400">
-              Click and drag to rotate | Scroll to zoom | Click nodes to isolate
+      {/* Viewport + controls */}
+      <section className="glass-panel rounded-card overflow-hidden">
+        <div className="flex flex-col gap-3 border-b border-glass-border px-card-padding py-4 md:flex-row md:items-center md:justify-between">
+          <div className="min-w-0">
+            <h2 className="font-label-caps text-label-caps uppercase text-on-surface">
+              Visualization controls
+            </h2>
+            <p className="mt-1.5 font-code-mono text-[11px] leading-relaxed text-on-surface-variant">
+              Drag to rotate · scroll to zoom · click a node to isolate it
             </p>
           </div>
-          <div className="flex items-center gap-4">
+
+          <div className="flex flex-wrap items-center gap-3">
             {anatomyGraph && <ExplainButton anatomyGraph={anatomyGraph} />}
-            <label className="flex items-center gap-2 cursor-pointer">
-              <input
-                type="checkbox"
-                checked={overlaysVisible}
-                onChange={(e) => setOverlaysVisible(e.target.checked)}
-                className="w-4 h-4 rounded border-gray-600 bg-gray-700 text-blue-600 focus:ring-blue-500"
-              />
-              <span className="text-white text-sm font-medium">Show Overlays</span>
-            </label>
-          </div>
-        </div>
-      </div>
-
-      {/* 3D Viewer */}
-      <div className="card" style={{ height: '600px' }}>
-        <Suspense
-          fallback={
-            <div className="flex items-center justify-center h-full">
-              <div className="text-xl text-gray-400">Initializing 3D scene...</div>
-            </div>
-          }
-        >
-          {anatomyGraph && (
-            <AnatomyScene
-              anatomyGraph={anatomyGraph}
-              overlaysVisible={overlaysVisible}
-            />
-          )}
-        </Suspense>
-      </div>
-
-      {/* Legend */}
-      <div className="grid md:grid-cols-2 gap-6 mt-6">
-        <div className="card">
-          <h3 className="text-xl font-bold mb-4 text-blue-400">Evidence Levels</h3>
-          <div className="space-y-3">
-            <div className="flex items-center gap-3">
-              <div className="w-4 h-4 rounded" style={{ backgroundColor: '#22c55e' }}></div>
-              <div>
-                <div className="text-white font-medium">High Evidence</div>
-                <div className="text-sm text-gray-400">Well-established, replicated findings</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-4 h-4 rounded" style={{ backgroundColor: '#f59e0b' }}></div>
-              <div>
-                <div className="text-white font-medium">Medium Evidence</div>
-                <div className="text-sm text-gray-400">Some evidence, requires validation</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-4 h-4 rounded" style={{ backgroundColor: '#3b82f6' }}></div>
-              <div>
-                <div className="text-white font-medium">Low Evidence</div>
-                <div className="text-sm text-gray-400">Preliminary or indirect associations</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div className="card">
-          <h3 className="text-xl font-bold mb-4 text-purple-400">Structure Types</h3>
-          <div className="space-y-3">
-            <div className="flex items-center gap-3">
-              <div className="w-4 h-4 rounded" style={{ backgroundColor: '#8b5cf6' }}></div>
-              <div>
-                <div className="text-white font-medium">System ({stats?.systemCount})</div>
-                <div className="text-sm text-gray-400">Body systems (e.g., cardiovascular)</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-4 h-4 rounded" style={{ backgroundColor: '#ec4899' }}></div>
-              <div>
-                <div className="text-white font-medium">Organ ({stats?.organCount})</div>
-                <div className="text-sm text-gray-400">Major organs (e.g., heart, brain)</div>
-              </div>
-            </div>
-            <div className="flex items-center gap-3">
-              <div className="w-4 h-4 rounded" style={{ backgroundColor: '#06b6d4' }}></div>
-              <div>
-                <div className="text-white font-medium">Substructure ({stats?.substructureCount})</div>
-                <div className="text-sm text-gray-400">Detailed anatomy (e.g., ventricle)</div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Educational Disclaimer */}
-      {anatomyGraph?.disclaimer && (
-        <div className="card bg-yellow-900 bg-opacity-10 border-yellow-600 mt-6">
-          <div className="flex items-start gap-3">
-            <svg
-              className="w-6 h-6 text-yellow-500 flex-shrink-0 mt-0.5"
-              fill="currentColor"
-              viewBox="0 0 20 20"
+            <button
+              type="button"
+              role="switch"
+              aria-checked={overlaysVisible}
+              onClick={() => setOverlaysVisible((v) => !v)}
+              className={`tap-target flex items-center gap-2 rounded-full border px-4 py-2 transition-colors ${
+                overlaysVisible
+                  ? 'border-secondary/40 bg-secondary/10 text-secondary'
+                  : 'border-glass-border bg-white/[0.02] text-on-surface-variant hover:bg-white/[0.06]'
+              }`}
             >
-              <path
-                fillRule="evenodd"
-                d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z"
-                clipRule="evenodd"
-              />
-            </svg>
-            <div>
-              <h4 className="text-yellow-500 font-bold mb-1">Important Notice</h4>
-              <p className="text-sm text-gray-300">{anatomyGraph.disclaimer}</p>
-            </div>
+              <Icon name={overlaysVisible ? 'visibility' : 'visibility_off'} size={18} />
+              <span className="font-label-caps text-label-caps uppercase">Overlays</span>
+            </button>
           </div>
         </div>
+
+        <div className="viewport-canvas relative h-[52vh] min-h-[320px] md:h-[60vh] lg:h-[600px]">
+          <Suspense
+            fallback={
+              <div className="flex h-full flex-col items-center justify-center gap-3">
+                <Icon name="progress_activity" size={36} className="animate-spin text-cytosine-azure" />
+                <p className="font-code-mono text-xs text-on-surface-variant">
+                  Initializing 3D scene…
+                </p>
+              </div>
+            }
+          >
+            {anatomyGraph && (
+              <AnatomyScene anatomyGraph={anatomyGraph} overlaysVisible={overlaysVisible} />
+            )}
+          </Suspense>
+        </div>
+      </section>
+
+      {/* Legends */}
+      <div className="grid grid-cols-1 gap-bento-gap md:grid-cols-2">
+        <section className="glass-panel rounded-card p-card-padding">
+          <h2 className="font-label-caps text-label-caps uppercase text-secondary">
+            Evidence levels
+          </h2>
+          <ul className="mt-4 space-y-3">
+            {EVIDENCE_LEGEND.map(([label, detail, color]) => (
+              <li key={label} className="flex items-start gap-3">
+                <span
+                  className="mt-1 h-3 w-3 shrink-0 rounded"
+                  style={{ backgroundColor: color, boxShadow: `0 0 8px ${color}66` }}
+                />
+                <span className="min-w-0">
+                  <span className="block text-sm text-on-surface">{label}</span>
+                  <span className="mt-0.5 block font-code-mono text-[11px] leading-relaxed text-on-surface-variant">
+                    {detail}
+                  </span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+
+        <section className="glass-panel rounded-card p-card-padding">
+          <h2 className="font-label-caps text-label-caps uppercase text-cytosine-azure">
+            Structure types
+          </h2>
+          <ul className="mt-4 space-y-3">
+            {[
+              ['System', stats?.systemCount, 'Body systems (e.g. cardiovascular)', NODE_TYPE_COLORS.SYSTEM],
+              ['Organ', stats?.organCount, 'Major organs (e.g. heart, brain)', NODE_TYPE_COLORS.ORGAN],
+              ['Substructure', stats?.substructureCount, 'Detailed anatomy (e.g. ventricle)', NODE_TYPE_COLORS.SUBSTRUCTURE],
+            ].map(([label, count, detail, color]) => (
+              <li key={label} className="flex items-start gap-3">
+                <span
+                  className="mt-1 h-3 w-3 shrink-0 rounded"
+                  style={{ backgroundColor: color }}
+                />
+                <span className="min-w-0">
+                  <span className="block text-sm text-on-surface">
+                    {label}
+                    {count != null && (
+                      <span className="ml-2 font-code-mono text-xs text-on-surface-variant">
+                        ({count})
+                      </span>
+                    )}
+                  </span>
+                  <span className="mt-0.5 block font-code-mono text-[11px] leading-relaxed text-on-surface-variant">
+                    {detail}
+                  </span>
+                </span>
+              </li>
+            ))}
+          </ul>
+        </section>
+      </div>
+
+      {/* Graph disclaimer */}
+      {anatomyGraph?.disclaimer && (
+        <section className="glass-panel rounded-card border-l-2 !border-l-guanine-amber p-card-padding">
+          <div className="flex items-start gap-3">
+            <Icon name="warning" size={20} className="mt-0.5 shrink-0 text-guanine-amber" />
+            <div>
+              <h2 className="font-label-caps text-label-caps uppercase text-guanine-amber">
+                Important notice
+              </h2>
+              <p className="mt-2 text-sm leading-relaxed text-on-surface-variant">
+                {anatomyGraph.disclaimer}
+              </p>
+            </div>
+          </div>
+        </section>
       )}
 
-      {/* Feature Information */}
-      <div className="grid md:grid-cols-2 gap-6 mt-6">
-        <div className="card">
-          <h3 className="text-xl font-bold mb-4 text-blue-400">Interaction Guide</h3>
-          <ul className="space-y-2 text-gray-300 text-sm">
-            <li>• <strong>Rotate:</strong> Click and drag anywhere in the 3D view</li>
-            <li>• <strong>Zoom:</strong> Use mouse wheel or pinch gesture</li>
-            <li>• <strong>Pan:</strong> Right-click and drag (or two-finger drag)</li>
-            <li>• <strong>Hover:</strong> See overlay details for each structure</li>
-            <li>• <strong>Click:</strong> Isolate a specific anatomical structure</li>
-            <li>• <strong>Toggle:</strong> Use controls to show/hide overlays</li>
-          </ul>
-        </div>
+      {/* Reference */}
+      <div className="grid grid-cols-1 gap-bento-gap md:grid-cols-2">
+        <section className="glass-panel rounded-card p-card-padding">
+          <h2 className="flex items-center gap-2 font-headline-md text-lg text-on-surface">
+            <Icon name="touch_app" size={20} className="text-secondary" />
+            Interaction guide
+          </h2>
+          <dl className="mt-4 space-y-2.5">
+            {INTERACTION_GUIDE.map(([action, detail]) => (
+              <div key={action} className="flex flex-wrap items-baseline gap-x-2 text-sm">
+                <dt className="font-label-caps text-label-caps uppercase text-secondary">
+                  {action}
+                </dt>
+                <dd className="text-on-surface-variant">{detail}</dd>
+              </div>
+            ))}
+          </dl>
+        </section>
 
-        <div className="card">
-          <h3 className="text-xl font-bold mb-4 text-purple-400">About This Visualization</h3>
-          <ul className="space-y-2 text-gray-300 text-sm">
-            <li>• Deterministic mapping from genomic variants to anatomy</li>
-            <li>• All associations labeled with evidence quality</li>
-            <li>• Overlay intensity reflects association strength</li>
-            <li>• Placeholder geometry for demonstration purposes</li>
-            <li>• Built with React Three Fiber and Three.js</li>
-            <li>• Educational/research visualization only</li>
+        <section className="glass-panel rounded-card p-card-padding">
+          <h2 className="flex items-center gap-2 font-headline-md text-lg text-on-surface">
+            <Icon name="info" size={20} className="text-cytosine-azure" />
+            About this visualization
+          </h2>
+          <ul className="mt-4 space-y-2.5">
+            {ABOUT.map((item) => (
+              <li
+                key={item}
+                className="flex items-start gap-2.5 font-code-mono text-xs leading-relaxed text-on-surface-variant"
+              >
+                <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-cytosine-azure" />
+                {item}
+              </li>
+            ))}
           </ul>
-        </div>
+        </section>
       </div>
     </div>
   )

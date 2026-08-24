@@ -33,15 +33,15 @@ function DisclaimerBanner({ persistent = false }) {
 
   return (
     <div
-      className="bg-yellow-900 bg-opacity-20 border-b-2 border-yellow-600"
+      className="glass-panel rounded-card mb-bento-gap border-l-2 !border-l-guanine-amber"
       role="alert"
       aria-live="polite"
     >
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-3">
+      <div className="px-4 py-3 sm:px-card-padding sm:py-4">
         <div className="flex items-start gap-3">
           {/* Warning Icon */}
           <svg
-            className="w-6 h-6 text-yellow-500 flex-shrink-0 mt-0.5"
+            className="mt-0.5 h-5 w-5 flex-shrink-0 text-guanine-amber"
             fill="currentColor"
             viewBox="0 0 20 20"
             aria-hidden="true"
@@ -55,10 +55,10 @@ function DisclaimerBanner({ persistent = false }) {
 
           {/* Content */}
           <div className="flex-1">
-            <h3 className="text-yellow-500 font-bold text-sm sm:text-base mb-1">
-              ⚠️ EDUCATIONAL/RESEARCH USE ONLY
+            <h3 className="mb-1.5 font-label-caps text-label-caps uppercase text-guanine-amber">
+              Educational / research use only
             </h3>
-            <p className="text-gray-300 text-xs sm:text-sm leading-relaxed">
+            <p className="text-xs leading-relaxed text-on-surface-variant sm:text-sm">
               This platform provides educational visualizations of genomic data.
               It is <strong>NOT</strong> a medical device and does <strong>NOT</strong> provide medical{' '}
               <span className="underline">diagnosis</span>,{' '}
@@ -73,11 +73,11 @@ function DisclaimerBanner({ persistent = false }) {
           {!persistent && (
             <button
               onClick={handleDismiss}
-              className="text-gray-400 hover:text-white transition flex-shrink-0"
+              className="tap-target -m-2 flex flex-shrink-0 items-center justify-center rounded-full text-on-surface-variant transition-colors hover:text-on-surface"
               aria-label="Dismiss disclaimer"
               title="Dismiss this notice"
             >
-              <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path
                   strokeLinecap="round"
                   strokeLinejoin="round"
