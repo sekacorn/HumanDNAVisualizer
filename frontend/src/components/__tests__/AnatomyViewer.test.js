@@ -5,6 +5,14 @@
  * Educational/research purposes only.
  */
 
+import { describe, it, expect } from 'vitest'
+import {
+  EVIDENCE_COLORS,
+  NODE_TYPE_COLORS,
+  NODE_TYPE_SCALE,
+  DEFAULT_NODE_SCALE,
+} from '../../config/evidenceColors'
+
 // Mock data for testing
 const mockAnatomyGraph = {
   nodes: [
@@ -53,7 +61,7 @@ const mockStats = {
  * Test: Overlay filtering by targetNodeId
  */
 describe('Overlay Filtering', () => {
-  test('should filter overlays by target node', () => {
+  it('should filter overlays by target node', () => {
     const targetNodeId = 'heart'
     const nodeOverlays = mockAnatomyGraph.overlays.filter(
       o => o.targetNodeId === targetNodeId
@@ -64,7 +72,7 @@ describe('Overlay Filtering', () => {
     expect(nodeOverlays[0].evidence).toBe('MEDIUM')
   })
 
-  test('should return empty array for node with no overlays', () => {
+  it('should return empty array for node with no overlays', () => {
     const targetNodeId = 'brain'
     const nodeOverlays = mockAnatomyGraph.overlays.filter(
       o => o.targetNodeId === targetNodeId
@@ -78,7 +86,7 @@ describe('Overlay Filtering', () => {
  * Test: Highlight intensity calculation
  */
 describe('Highlight Intensity Calculation', () => {
-  test('should sum intensities from multiple overlays', () => {
+  it('should sum intensities from multiple overlays', () => {
     const multipleOverlays = [
       { intensity: 0.3 },
       { intensity: 0.4 },
@@ -93,7 +101,7 @@ describe('Highlight Intensity Calculation', () => {
     expect(totalIntensity).toBe(1.0) // Capped at 1.0
   })
 
-  test('should return 0 for no overlays', () => {
+  it('should return 0 for no overlays', () => {
     const noOverlays = []
     const totalIntensity = Math.min(
       1.0,
@@ -108,7 +116,7 @@ describe('Highlight Intensity Calculation', () => {
  * Test: Evidence level prioritization
  */
 describe('Evidence Level Priority', () => {
-  test('should select highest priority evidence level', () => {
+  it('should select highest priority evidence level', () => {
     const overlays = [
       { evidence: 'LOW' },
       { evidence: 'HIGH' },
@@ -123,7 +131,7 @@ describe('Evidence Level Priority', () => {
     expect(highest.evidence).toBe('HIGH')
   })
 
-  test('should handle single overlay', () => {
+  it('should handle single overlay', () => {
     const overlays = [{ evidence: 'LOW' }]
     const priorities = { HIGH: 3, MEDIUM: 2, LOW: 1 }
     const highest = overlays.reduce((best, curr) =>
@@ -138,23 +146,20 @@ describe('Evidence Level Priority', () => {
  * Test: Evidence color mapping
  */
 describe('Evidence Color Mapping', () => {
-  const EVIDENCE_COLORS = {
-    HIGH: '#22c55e',
-    MEDIUM: '#f59e0b',
-    LOW: '#3b82f6'
-  }
-
-  test('should map evidence levels to correct colors', () => {
-    expect(EVIDENCE_COLORS['HIGH']).toBe('#22c55e')
-    expect(EVIDENCE_COLORS['MEDIUM']).toBe('#f59e0b')
-    expect(EVIDENCE_COLORS['LOW']).toBe('#3b82f6')
+  it('should map evidence levels to the base-pair spectrum', () => {
+    expect(EVIDENCE_COLORS.HIGH).toBe('#4edea3') // adenine emerald
+    expect(EVIDENCE_COLORS.MEDIUM).toBe('#ffb400') // guanine amber
+    expect(EVIDENCE_COLORS.LOW).toBe('#adc6ff') // cytosine azure
   })
 
-  test('should return color for overlay evidence level', () => {
+  it('should return color for overlay evidence level', () => {
     const overlay = { evidence: 'MEDIUM' }
-    const color = EVIDENCE_COLORS[overlay.evidence]
 
-    expect(color).toBe('#f59e0b')
+    expect(EVIDENCE_COLORS[overlay.evidence]).toBe('#ffb400')
+  })
+
+  it('should define a colour for every evidence level', () => {
+    expect(Object.keys(EVIDENCE_COLORS).sort()).toEqual(['HIGH', 'LOW', 'MEDIUM'])
   })
 })
 
@@ -162,23 +167,23 @@ describe('Evidence Color Mapping', () => {
  * Test: Node type color mapping
  */
 describe('Node Type Color Mapping', () => {
-  const NODE_TYPE_COLORS = {
-    SYSTEM: '#8b5cf6',
-    ORGAN: '#ec4899',
-    SUBSTRUCTURE: '#06b6d4'
-  }
-
-  test('should map node types to correct colors', () => {
-    expect(NODE_TYPE_COLORS['SYSTEM']).toBe('#8b5cf6')
-    expect(NODE_TYPE_COLORS['ORGAN']).toBe('#ec4899')
-    expect(NODE_TYPE_COLORS['SUBSTRUCTURE']).toBe('#06b6d4')
+  it('should map node types to the neutral surface ladder', () => {
+    expect(NODE_TYPE_COLORS.SYSTEM).toBe('#b7c8e1')
+    expect(NODE_TYPE_COLORS.ORGAN).toBe('#8e9197')
+    expect(NODE_TYPE_COLORS.SUBSTRUCTURE).toBe('#44474c')
   })
 
-  test('should handle node type from anatomy graph', () => {
+  it('should handle node type from anatomy graph', () => {
     const node = mockAnatomyGraph.nodes.find(n => n.id === 'heart')
-    const color = NODE_TYPE_COLORS[node.type]
 
-    expect(color).toBe('#ec4899')
+    expect(NODE_TYPE_COLORS[node.type]).toBe('#8e9197')
+  })
+
+  it('should keep base anatomy visually distinct from evidence overlays', () => {
+    const overlayColours = Object.values(EVIDENCE_COLORS)
+    Object.values(NODE_TYPE_COLORS).forEach(colour => {
+      expect(overlayColours).not.toContain(colour)
+    })
   })
 })
 
@@ -186,7 +191,7 @@ describe('Node Type Color Mapping', () => {
  * Test: Stats calculation
  */
 describe('Stats Validation', () => {
-  test('should have correct evidence counts', () => {
+  it('should have correct evidence counts', () => {
     const highCount = mockAnatomyGraph.overlays.filter(
       o => o.evidence === 'HIGH'
     ).length
@@ -203,7 +208,7 @@ describe('Stats Validation', () => {
     expect(highCount + mediumCount + lowCount).toBe(mockAnatomyGraph.overlays.length)
   })
 
-  test('should count nodes by type', () => {
+  it('should count nodes by type', () => {
     const systemCount = mockAnatomyGraph.nodes.filter(
       n => n.type === 'SYSTEM'
     ).length
@@ -220,22 +225,15 @@ describe('Stats Validation', () => {
  * Test: Node scale calculation
  */
 describe('Node Scale Calculation', () => {
-  const getNodeScale = (nodeType) => {
-    switch (nodeType) {
-      case 'SYSTEM': return 1.0
-      case 'ORGAN': return 0.8
-      case 'SUBSTRUCTURE': return 0.6
-      default: return 0.7
-    }
-  }
+  const getNodeScale = (nodeType) => NODE_TYPE_SCALE[nodeType] ?? DEFAULT_NODE_SCALE
 
-  test('should return correct scale for each node type', () => {
+  it('should return correct scale for each node type', () => {
     expect(getNodeScale('SYSTEM')).toBe(1.0)
     expect(getNodeScale('ORGAN')).toBe(0.8)
     expect(getNodeScale('SUBSTRUCTURE')).toBe(0.6)
   })
 
-  test('should return default scale for unknown type', () => {
+  it('should return default scale for unknown type', () => {
     expect(getNodeScale('UNKNOWN')).toBe(0.7)
   })
 })
@@ -248,54 +246,16 @@ describe('Isolation Mode', () => {
     return isIsolated && !isSelected ? 0.1 : 1.0
   }
 
-  test('should reduce opacity for non-selected nodes in isolation mode', () => {
+  it('should reduce opacity for non-selected nodes in isolation mode', () => {
     expect(calculateOpacity(true, false)).toBe(0.1)
   })
 
-  test('should keep full opacity for selected node in isolation mode', () => {
+  it('should keep full opacity for selected node in isolation mode', () => {
     expect(calculateOpacity(true, true)).toBe(1.0)
   })
 
-  test('should keep full opacity when not in isolation mode', () => {
+  it('should keep full opacity when not in isolation mode', () => {
     expect(calculateOpacity(false, false)).toBe(1.0)
     expect(calculateOpacity(false, true)).toBe(1.0)
   })
 })
-
-// Simple test runner (no external library needed)
-function expect(actual) {
-  return {
-    toBe: (expected) => {
-      if (actual !== expected) {
-        throw new Error(`Expected ${expected} but got ${actual}`)
-      }
-    }
-  }
-}
-
-function describe(name, fn) {
-  console.log(`\n${name}`)
-  fn()
-}
-
-function test(name, fn) {
-  try {
-    fn()
-    console.log(`  ✓ ${name}`)
-  } catch (error) {
-    console.error(`  ✗ ${name}`)
-    console.error(`    ${error.message}`)
-  }
-}
-
-// Run all tests
-console.log('=== AnatomyViewer Component Tests ===')
-console.log('Educational/research purposes only\n')
-
-// Export for potential use with proper test runners
-if (typeof module !== 'undefined' && module.exports) {
-  module.exports = {
-    mockAnatomyGraph,
-    mockStats
-  }
-}

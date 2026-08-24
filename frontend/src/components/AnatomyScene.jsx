@@ -2,6 +2,12 @@ import { useRef, useState, useMemo, useCallback } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { OrbitControls, PerspectiveCamera, Html } from '@react-three/drei'
 import * as THREE from 'three'
+import {
+  EVIDENCE_COLORS,
+  NODE_TYPE_COLORS,
+  NODE_TYPE_SCALE,
+  DEFAULT_NODE_SCALE,
+} from '../config/evidenceColors'
 
 /**
  * 3D Anatomy Scene Component
@@ -10,20 +16,9 @@ import * as THREE from 'three'
  * Educational/research purposes only - not for medical diagnosis or treatment.
  */
 
-// Evidence levels borrow the DNA base-pair spectrum so colour means the same
-// thing here as it does everywhere else in the app.
-export const EVIDENCE_COLORS = {
-  HIGH: '#4edea3',   // adenine emerald
-  MEDIUM: '#ffb400', // guanine amber
-  LOW: '#adc6ff'     // cytosine azure
-}
-
-// Unhighlighted anatomy sits in the neutral surface ladder so overlays pop.
-export const NODE_TYPE_COLORS = {
-  SYSTEM: '#b7c8e1',       // primary
-  ORGAN: '#8e9197',        // outline
-  SUBSTRUCTURE: '#44474c'  // outline variant
-}
+// Colour tokens live in config/ so tests can import them without three.js.
+// Re-exported here because callers already import them from this module.
+export { EVIDENCE_COLORS, NODE_TYPE_COLORS }
 
 // Placeholder positions for anatomical structures (simple layout)
 const NODE_POSITIONS = {
@@ -78,14 +73,10 @@ function AnatomyNode({ node, overlays, onHover, onClick, isSelected, isIsolated 
   }, [highlightIntensity, highestEvidence, node.type])
 
   // Scale based on node type
-  const scale = useMemo(() => {
-    switch (node.type) {
-      case 'SYSTEM': return 1.0
-      case 'ORGAN': return 0.8
-      case 'SUBSTRUCTURE': return 0.6
-      default: return 0.7
-    }
-  }, [node.type])
+  const scale = useMemo(
+    () => NODE_TYPE_SCALE[node.type] ?? DEFAULT_NODE_SCALE,
+    [node.type]
+  )
 
   // Position from lookup or default
   const position = NODE_POSITIONS[node.id] || [0, 0, 0]

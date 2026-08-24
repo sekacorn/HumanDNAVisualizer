@@ -1,5 +1,5 @@
 import { describe, it, expect, vi } from 'vitest'
-import { render, screen, fireEvent } from '@testing-library/react'
+import { render, screen, fireEvent, within } from '@testing-library/react'
 import Stepper from '../components/Stepper'
 
 /**
@@ -10,6 +10,18 @@ import Stepper from '../components/Stepper'
  */
 
 describe('Stepper Component', () => {
+  // Stepper renders both a desktop track and a mobile list; CSS hides one of
+  // them, but jsdom applies no CSS, so every step appears twice. Scope queries
+  // to one view rather than matching a doubled DOM.
+  const renderStepper = (props) => {
+    const utils = render(<Stepper {...props} />)
+    return {
+      ...utils,
+      desktop: within(utils.container.querySelector('.hidden.lg\\:block')),
+      mobile: within(utils.container.querySelector('.lg\\:hidden')),
+    }
+  }
+
   const mockSteps = [
     {
       stepNumber: 1,
@@ -36,19 +48,19 @@ describe('Stepper Component', () => {
 
   describe('Rendering', () => {
     it('should render all steps', () => {
-      render(<Stepper steps={mockSteps} currentStep={0} />)
+      const { desktop } = renderStepper({ steps: mockSteps, currentStep: 0 })
 
-      expect(screen.getByText('Introduction')).toBeInTheDocument()
-      expect(screen.getByText('Main Concepts')).toBeInTheDocument()
-      expect(screen.getByText('Advanced Topics')).toBeInTheDocument()
+      expect(desktop.getByText('Introduction')).toBeInTheDocument()
+      expect(desktop.getByText('Main Concepts')).toBeInTheDocument()
+      expect(desktop.getByText('Advanced Topics')).toBeInTheDocument()
     })
 
     it('should render step numbers', () => {
-      render(<Stepper steps={mockSteps} currentStep={0} />)
+      const { desktop } = renderStepper({ steps: mockSteps, currentStep: 0 })
 
-      expect(screen.getByText('1')).toBeInTheDocument()
-      expect(screen.getByText('2')).toBeInTheDocument()
-      expect(screen.getByText('3')).toBeInTheDocument()
+      expect(desktop.getByText('1')).toBeInTheDocument()
+      expect(desktop.getByText('2')).toBeInTheDocument()
+      expect(desktop.getByText('3')).toBeInTheDocument()
     })
 
     it('should show progress bar on mobile view', () => {
@@ -62,11 +74,10 @@ describe('Stepper Component', () => {
 
   describe('Current Step Highlighting', () => {
     it('should highlight the current step', () => {
-      const { container } = render(<Stepper steps={mockSteps} currentStep={1} />)
+      const { desktop } = renderStepper({ steps: mockSteps, currentStep: 1 })
 
-      // Find button containing step 2 (current)
-      const buttons = container.querySelectorAll('button')
-      const step2Button = Array.from(buttons).find(btn => btn.textContent.includes('Main Concepts'))
+      // On the desktop track each step control is labelled by its number
+      const step2Button = desktop.getByRole('button', { name: '2' })
 
       expect(step2Button).toHaveClass('bg-cytosine-azure')
     })
@@ -80,11 +91,10 @@ describe('Stepper Component', () => {
     })
 
     it('should show future steps as inactive', () => {
-      const { container } = render(<Stepper steps={mockSteps} currentStep={0} />)
+      const { desktop } = renderStepper({ steps: mockSteps, currentStep: 0 })
 
-      // Find button containing step 3 (future)
-      const buttons = container.querySelectorAll('button')
-      const step3Button = Array.from(buttons).find(btn => btn.textContent.includes('Advanced Topics'))
+      // On the desktop track each step control is labelled by its number
+      const step3Button = desktop.getByRole('button', { name: '3' })
 
       expect(step3Button).toHaveClass('bg-surface-container-high')
     })
@@ -174,9 +184,9 @@ describe('Stepper Component', () => {
   describe('Edge Cases', () => {
     it('should handle single step tour', () => {
       const singleStep = [mockSteps[0]]
-      render(<Stepper steps={singleStep} currentStep={0} />)
+      const { desktop } = renderStepper({ steps: singleStep, currentStep: 0 })
 
-      expect(screen.getByText('Introduction')).toBeInTheDocument()
+      expect(desktop.getByText('Introduction')).toBeInTheDocument()
       expect(screen.getByText('100%')).toBeInTheDocument()
     })
 
@@ -187,10 +197,10 @@ describe('Stepper Component', () => {
     })
 
     it('should handle last step', () => {
-      render(<Stepper steps={mockSteps} currentStep={2} />)
+      const { desktop } = renderStepper({ steps: mockSteps, currentStep: 2 })
 
       expect(screen.getByText('100%')).toBeInTheDocument()
-      const checkmarks = screen.getAllByText('✓')
+      const checkmarks = desktop.getAllByText('✓')
       expect(checkmarks.length).toBe(2) // Steps 1 and 2 completed
     })
 
@@ -203,10 +213,10 @@ describe('Stepper Component', () => {
         overlayConfig: { intensity: 0.5 }
       }))
 
-      render(<Stepper steps={manySteps} currentStep={5} />)
+      const { desktop } = renderStepper({ steps: manySteps, currentStep: 5 })
 
-      expect(screen.getByText('Step 1')).toBeInTheDocument()
-      expect(screen.getByText('Step 10')).toBeInTheDocument()
+      expect(desktop.getByText('Step 1')).toBeInTheDocument()
+      expect(desktop.getByText('Step 10')).toBeInTheDocument()
       expect(screen.getByText('60%')).toBeInTheDocument()
     })
   })
@@ -229,10 +239,12 @@ describe('Stepper Component', () => {
     })
 
     it('should show step titles for screen readers', () => {
-      render(<Stepper steps={mockSteps} currentStep={0} />)
+      const { desktop, mobile } = renderStepper({ steps: mockSteps, currentStep: 0 })
 
+      // Both views expose every title; whichever one CSS reveals stays labelled.
       mockSteps.forEach(step => {
-        expect(screen.getByText(step.title)).toBeInTheDocument()
+        expect(desktop.getByText(step.title)).toBeInTheDocument()
+        expect(mobile.getByText(step.title)).toBeInTheDocument()
       })
     })
   })

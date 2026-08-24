@@ -39,7 +39,7 @@ function Stepper({ steps, currentStep, onStepClick }) {
                     className={`
                       flex h-10 w-10 cursor-pointer items-center justify-center rounded-full
                       text-sm font-bold transition-all duration-200
-                      ${isActive ? 'scale-110 bg-cytosine-azure text-on-primary ring-4 ring-cytosine-azure/25' : ''}
+                      ${isActive ? 'scale-110 bg-cytosine-azure text-on-primary ring-4 ring-cytosine-azure/25 hover:brightness-110' : ''}
                       ${isCompleted ? 'bg-adenine-emerald text-on-secondary hover:brightness-110' : ''}
                       ${!isActive && !isCompleted ? 'bg-surface-container-high text-on-surface-variant hover:bg-surface-bright' : ''}
                     `}
@@ -94,8 +94,8 @@ function Stepper({ steps, currentStep, onStepClick }) {
                 className={`
                   tap-target flex w-full cursor-pointer items-center gap-3 rounded-lg border p-3
                   transition-colors
-                  ${isActive ? 'border-cytosine-azure/40 bg-cytosine-azure/10' : ''}
-                  ${isCompleted ? 'border-adenine-emerald/30 bg-adenine-emerald/[0.06]' : ''}
+                  ${isActive ? 'border-cytosine-azure/40 bg-cytosine-azure/10 hover:bg-cytosine-azure/20' : ''}
+                  ${isCompleted ? 'border-adenine-emerald/30 bg-adenine-emerald/[0.06] hover:bg-adenine-emerald/[0.12]' : ''}
                   ${!isActive && !isCompleted ? 'border-glass-border bg-white/[0.02] hover:bg-white/[0.06]' : ''}
                 `}
               >
