@@ -1,5 +1,6 @@
 import { Suspense, useState } from 'react'
-import DNAViewer, { BASE_COLORS } from '../components/DNAViewer'
+import DNAViewer from '../components/DNAViewer'
+import { BASE_COLORS } from '../config/palette'
 import Icon from '../components/ui/Icon'
 import PageHeader from '../components/ui/PageHeader'
 import StatusPill from '../components/ui/StatusPill'

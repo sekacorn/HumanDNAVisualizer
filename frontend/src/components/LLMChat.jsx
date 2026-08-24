@@ -141,7 +141,6 @@ function LLMChat({ userId }) {
           messages.map((msg, index) => (
             <div
               // Transcript entries are append-only, so position is a stable identity
-              // eslint-disable-next-line react/no-array-index-key
               key={index}
               className={`flex ${msg.role === 'user' ? 'justify-end' : 'justify-start'}`}
             >

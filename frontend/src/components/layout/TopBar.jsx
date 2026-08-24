@@ -162,7 +162,6 @@ function TopBar({ user, isAuthenticated, onOpenDrawer, onLogout }) {
               size={20}
               className="absolute left-3 top-1/2 -translate-y-1/2 text-on-surface-variant"
             />
-            {/* eslint-disable-next-line jsx-a11y/no-autofocus */}
             <input
               autoFocus
               type="search"

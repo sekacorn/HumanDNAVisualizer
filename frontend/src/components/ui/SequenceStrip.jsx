@@ -54,10 +54,8 @@ function SequenceStrip({ rows = 12, width = 44, seed = 42, live = true, classNam
       <div className="pointer-events-none absolute inset-x-0 bottom-0 z-10 h-8 bg-gradient-to-t from-[#031427] to-transparent" />
       {lines.map((line, rowIndex) => (
         // Rows are positional (a scrolling window), so index is the stable identity here
-        // eslint-disable-next-line react/no-array-index-key
         <div key={rowIndex} className="whitespace-nowrap">
           {line.split('').map((base, i) => (
-            // eslint-disable-next-line react/no-array-index-key
             <span key={i} className={BASE_CLASS[base]}>
               {base}
             </span>

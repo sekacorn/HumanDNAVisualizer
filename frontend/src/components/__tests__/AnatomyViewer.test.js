@@ -11,7 +11,7 @@ import {
   NODE_TYPE_COLORS,
   NODE_TYPE_SCALE,
   DEFAULT_NODE_SCALE,
-} from '../../config/evidenceColors'
+} from '../../config/palette'
 
 // Mock data for testing
 const mockAnatomyGraph = {
@@ -206,6 +206,20 @@ describe('Stats Validation', () => {
     expect(mediumCount).toBe(1)
     expect(lowCount).toBe(1)
     expect(highCount + mediumCount + lowCount).toBe(mockAnatomyGraph.overlays.length)
+  })
+
+  it('should keep the stats fixture internally consistent', () => {
+    // The stats fixture describes the full graph, of which mockAnatomyGraph is
+    // a trimmed sample, so only the derived totals have to reconcile.
+    expect(
+      mockStats.systemCount + mockStats.organCount + mockStats.substructureCount
+    ).toBe(mockStats.nodeCount)
+
+    expect(
+      mockStats.highEvidenceCount + mockStats.mediumEvidenceCount + mockStats.lowEvidenceCount
+    ).toBe(mockStats.overlayCount)
+
+    expect(mockStats.overlayCount).toBe(mockAnatomyGraph.overlays.length)
   })
 
   it('should count nodes by type', () => {

@@ -2,19 +2,8 @@ import { useRef, useMemo } from 'react'
 import { Canvas, useFrame } from '@react-three/fiber'
 import { OrbitControls, PerspectiveCamera } from '@react-three/drei'
 import * as THREE from 'three'
+import { BASE_COLORS, BACKBONE_COLOR } from '../config/palette'
 
-/**
- * Base-pair colour spectrum from the design system. Colour here is data
- * signification, not decoration: each base keeps its hue everywhere in the app.
- */
-export const BASE_COLORS = {
-  A: '#4edea3', // adenine — emerald
-  T: '#ffb4ab', // thymine — crimson
-  G: '#ffb400', // guanine — amber
-  C: '#adc6ff', // cytosine — azure
-}
-
-const BACKBONE_COLOR = '#b7c8e1'
 const PAIRINGS = [
   ['A', 'T'],
   ['T', 'A'],

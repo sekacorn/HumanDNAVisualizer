@@ -7,7 +7,7 @@ import {
   NODE_TYPE_COLORS,
   NODE_TYPE_SCALE,
   DEFAULT_NODE_SCALE,
-} from '../config/evidenceColors'
+} from '../config/palette'
 
 /**
  * 3D Anatomy Scene Component
@@ -16,9 +16,8 @@ import {
  * Educational/research purposes only - not for medical diagnosis or treatment.
  */
 
-// Colour tokens live in config/ so tests can import them without three.js.
-// Re-exported here because callers already import them from this module.
-export { EVIDENCE_COLORS, NODE_TYPE_COLORS }
+// Colour tokens live in config/palette so this module exports only components
+// (a Fast Refresh requirement) and tests can read them without loading three.js.
 
 // Placeholder positions for anatomical structures (simple layout)
 const NODE_POSITIONS = {
@@ -161,19 +160,21 @@ function ConnectionLine({ edge, nodes }) {
   const fromNode = nodes.find(n => n.id === edge.from)
   const toNode = nodes.find(n => n.id === edge.to)
 
-  if (!fromNode || !toNode) return null
-
-  const fromPos = NODE_POSITIONS[fromNode.id] || [0, 0, 0]
-  const toPos = NODE_POSITIONS[toNode.id] || [0, 0, 0]
-
-  const points = useMemo(() => [
-    new THREE.Vector3(...fromPos),
-    new THREE.Vector3(...toPos)
-  ], [fromPos, toPos])
-
+  // Resolve geometry inside the memo so the hook runs on every render: an edge
+  // referencing a missing node must not skip hooks via an early return.
   const lineGeometry = useMemo(() => {
-    return new THREE.BufferGeometry().setFromPoints(points)
-  }, [points])
+    if (!fromNode || !toNode) return null
+
+    const fromPos = NODE_POSITIONS[fromNode.id] || [0, 0, 0]
+    const toPos = NODE_POSITIONS[toNode.id] || [0, 0, 0]
+
+    return new THREE.BufferGeometry().setFromPoints([
+      new THREE.Vector3(...fromPos),
+      new THREE.Vector3(...toPos),
+    ])
+  }, [fromNode, toNode])
+
+  if (!lineGeometry) return null
 
   return (
     <line geometry={lineGeometry}>

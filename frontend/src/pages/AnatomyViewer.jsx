@@ -1,6 +1,7 @@
 import { Suspense, useState, useEffect } from 'react'
 import { useSearchParams } from 'react-router-dom'
-import AnatomyScene, { EVIDENCE_COLORS, NODE_TYPE_COLORS } from '../components/AnatomyScene'
+import AnatomyScene from '../components/AnatomyScene'
+import { EVIDENCE_COLORS, NODE_TYPE_COLORS } from '../config/palette'
 import ExplainButton from '../components/ExplainButton'
 import VisualizationDisclaimer from '../components/VisualizationDisclaimer'
 import Icon from '../components/ui/Icon'

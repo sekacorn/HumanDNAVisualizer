@@ -16,7 +16,6 @@ import authService from '../services/authService';
  */
 export default function ProtectedRoute({ children, requireRole = null }) {
   const isAuthenticated = authService.isAuthenticated();
-  const user = authService.getCurrentUser();
 
   // Check if user is authenticated
   if (!isAuthenticated) {
